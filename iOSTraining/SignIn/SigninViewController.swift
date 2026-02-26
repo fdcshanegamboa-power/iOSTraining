@@ -70,6 +70,9 @@ class SigninViewController: UIViewController {
 //        
 //        self.present(productListVC, animated: true)
         self.navigationController?.pushViewController(productListVC, animated: true)
+//        
+//        let vc = TestViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 

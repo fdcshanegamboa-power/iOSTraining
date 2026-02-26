@@ -3,13 +3,13 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProductListViewController" customModule="iOSTraining" customModuleProvider="target">
             <connections>
+                <outlet property="productSearchBar" destination="LE3-7t-hYi" id="Qws-jj-cEX"/>
                 <outlet property="tableView" destination="4iX-s3-R8Z" id="USr-bC-XTd"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -19,23 +19,55 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="4iX-s3-R8Z">
-                    <rect key="frame" x="0.0" y="130" width="393" height="654"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="4iX-s3-R8Z">
+                    <rect key="frame" x="0.0" y="209" width="393" height="643"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search Products" translatesAutoresizingMaskIntoConstraints="NO" id="LE3-7t-hYi">
+                    <rect key="frame" x="0.0" y="130" width="343" height="64"/>
+                    <color key="barTintColor" systemColor="systemYellowColor"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <scopeButtonTitles>
+                        <string>Title</string>
+                        <string>Title</string>
+                    </scopeButtonTitles>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="q0H-gP-Mko"/>
+                    </connections>
+                </searchBar>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sqs-03-Xat">
+                    <rect key="frame" x="338.66666666666669" y="145" width="54.333333333333314" height="35"/>
+                    <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                    <state key="normal" title="Sort"/>
+                    <buttonConfiguration key="configuration" style="plain" image="arrow.up.arrow.down" catalog="system">
+                        <color key="baseForegroundColor" systemColor="labelColor"/>
+                    </buttonConfiguration>
+                    <connections>
+                        <action selector="didTapSort:" destination="-1" eventType="touchUpInside" id="zro-2b-HIK"/>
+                    </connections>
+                </button>
             </subviews>
-            <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemYellowColor"/>
             <constraints>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4iX-s3-R8Z" secondAttribute="trailing" id="O5O-Y7-4OP"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="4iX-s3-R8Z" secondAttribute="bottom" id="jNh-yg-8zP"/>
-                <constraint firstItem="4iX-s3-R8Z" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="rHO-1a-75S"/>
-                <constraint firstItem="4iX-s3-R8Z" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="xA3-bV-gBA"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="top" secondItem="Sqs-03-Xat" secondAttribute="bottom" constant="29" id="3sC-IG-BDP"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="ESe-XT-x0h"/>
+                <constraint firstItem="LE3-7t-hYi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IvY-nL-4M1"/>
+                <constraint firstItem="LE3-7t-hYi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="130" id="Uab-fM-QG5"/>
+                <constraint firstItem="Sqs-03-Xat" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="145" id="d9G-fm-bLf"/>
+                <constraint firstAttribute="trailing" secondItem="Sqs-03-Xat" secondAttribute="trailing" id="kMi-d8-by5"/>
+                <constraint firstAttribute="trailing" secondItem="LE3-7t-hYi" secondAttribute="trailing" constant="50" id="mL2-dg-vNj"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="rHO-1a-75S"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="vgG-OR-3Nb"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="top" secondItem="LE3-7t-hYi" secondAttribute="bottom" constant="15" id="zXu-xk-tTb"/>
             </constraints>
             <point key="canvasLocation" x="-40.458015267175568" y="103.52112676056339"/>
         </view>
     </objects>
     <resources>
+        <image name="arrow.up.arrow.down" catalog="system" width="128" height="99"/>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
