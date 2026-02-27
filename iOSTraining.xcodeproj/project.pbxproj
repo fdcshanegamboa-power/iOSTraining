@@ -77,8 +77,6 @@
 				2921DD182F4D9B130065D340 /* iOSTraining */,
 			);
 			name = iOSTraining;
-			packageProductDependencies = (
-			);
 			productName = iOSTraining;
 			productReference = 2921DD162F4D9B130065D340 /* iOSTraining.app */;
 			productType = "com.apple.product-type.application";

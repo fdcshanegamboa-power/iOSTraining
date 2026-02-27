@@ -19,13 +19,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         setRootViewController(loginViewController, animated: animated)
     }
+    
+    func showMainScreen(animated: Bool = false) {
+        let tabBarController = makeTabBarController()
+        setRootViewController(tabBarController, animated: animated)
+    }
+    
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
         self.window = window
-        showLoginScreen(animated: false)
+        
+        
+
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+        if isLoggedIn == true {
+            let tabBarController = makeTabBarController()
+            setRootViewController(tabBarController, animated: true)
+        }else {
+            showLoginScreen(animated: false)
+
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -58,16 +74,62 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
+private extension SceneDelegate {
+    func makeTabBarController() -> UITabBarController {
+        let tabBar = UITabBarController()
+        tabBar.viewControllers = [
+            makeProductsTab(),
+            makeSettingsTab()
+        ]
+        tabBar.tabBar.tintColor = .systemBlue
+        if #available(iOS 15.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            tabBar.tabBar.standardAppearance = appearance
+            tabBar.tabBar.scrollEdgeAppearance = appearance
+        }
+        return tabBar
+    }
+
+    func makeProductsTab() -> UINavigationController {
+        let vc = ProductListViewController(
+            nibName: String(describing: ProductListViewController.self),
+            bundle: nil
+        )
+        let nav = UINavigationController(rootViewController: vc)
+        nav.tabBarItem = UITabBarItem(
+            title: "Products",
+            image: UIImage(systemName: "bag"),
+            selectedImage: UIImage(systemName: "bag.fill")
+        )
+        return nav
+    }
+
+    func makeSettingsTab() -> UINavigationController {
+        let vc = SettingsViewController(
+            nibName: String(describing: SettingsViewController.self),
+            bundle: nil
+        )
+        let nav = UINavigationController(rootViewController: vc)
+        nav.tabBarItem = UITabBarItem(
+            title: "Settings",
+            image: UIImage(systemName: "gearshape"),
+            selectedImage: UIImage(systemName: "gearshape.fill")
+        )
+        return nav
+    }
+    
+}
+
 
 private extension SceneDelegate {
     func setRootViewController(_ viewController: UIViewController, animated: Bool) {
         guard let window else { return }
 
         let applyRoot = {
-            let nav = UINavigationController(rootViewController: viewController)
             let wereAnimationsEnabled = UIView.areAnimationsEnabled
             UIView.setAnimationsEnabled(false)
-            window.rootViewController = nav
+            window.rootViewController = viewController
             window.makeKeyAndVisible()
             UIView.setAnimationsEnabled(wereAnimationsEnabled)
         }

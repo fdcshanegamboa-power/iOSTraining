@@ -9,8 +9,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProductListViewController" customModule="iOSTraining" customModuleProvider="target">
             <connections>
-                <outlet property="productSearchBar" destination="LE3-7t-hYi" id="Qws-jj-cEX"/>
-                <outlet property="tableView" destination="4iX-s3-R8Z" id="USr-bC-XTd"/>
+                <outlet property="productSearchBar" destination="LE3-7t-hYi" id="kGR-Cy-g1O"/>
+                <outlet property="tableView" destination="4iX-s3-R8Z" id="xGM-oB-s5y"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,11 +20,11 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="4iX-s3-R8Z">
-                    <rect key="frame" x="0.0" y="209" width="393" height="643"/>
+                    <rect key="frame" x="0.0" y="189" width="393" height="663"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
                 <searchBar contentMode="redraw" searchBarStyle="minimal" placeholder="Search Products" translatesAutoresizingMaskIntoConstraints="NO" id="LE3-7t-hYi">
-                    <rect key="frame" x="0.0" y="130" width="343" height="64"/>
+                    <rect key="frame" x="0.0" y="110" width="343" height="64"/>
                     <color key="barTintColor" systemColor="systemYellowColor"/>
                     <textInputTraits key="textInputTraits"/>
                     <scopeButtonTitles>
@@ -36,7 +36,7 @@
                     </connections>
                 </searchBar>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sqs-03-Xat">
-                    <rect key="frame" x="338.66666666666669" y="145" width="54.333333333333314" height="35"/>
+                    <rect key="frame" x="338.66666666666669" y="110" width="54.333333333333314" height="69"/>
                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                     <state key="normal" title="Sort"/>
                     <buttonConfiguration key="configuration" style="plain" image="arrow.up.arrow.down" catalog="system">
@@ -47,13 +47,13 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" systemColor="systemYellowColor"/>
+            <color key="backgroundColor" systemColor="systemBlueColor"/>
             <constraints>
-                <constraint firstItem="4iX-s3-R8Z" firstAttribute="top" secondItem="Sqs-03-Xat" secondAttribute="bottom" constant="29" id="3sC-IG-BDP"/>
+                <constraint firstItem="4iX-s3-R8Z" firstAttribute="top" secondItem="Sqs-03-Xat" secondAttribute="bottom" constant="10" id="3sC-IG-BDP"/>
                 <constraint firstItem="4iX-s3-R8Z" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="ESe-XT-x0h"/>
                 <constraint firstItem="LE3-7t-hYi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IvY-nL-4M1"/>
-                <constraint firstItem="LE3-7t-hYi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="130" id="Uab-fM-QG5"/>
-                <constraint firstItem="Sqs-03-Xat" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="145" id="d9G-fm-bLf"/>
+                <constraint firstItem="LE3-7t-hYi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="110" id="Uab-fM-QG5"/>
+                <constraint firstItem="Sqs-03-Xat" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="110" id="d9G-fm-bLf"/>
                 <constraint firstAttribute="trailing" secondItem="Sqs-03-Xat" secondAttribute="trailing" id="kMi-d8-by5"/>
                 <constraint firstAttribute="trailing" secondItem="LE3-7t-hYi" secondAttribute="trailing" constant="50" id="mL2-dg-vNj"/>
                 <constraint firstItem="4iX-s3-R8Z" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="rHO-1a-75S"/>
@@ -70,6 +70,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemYellowColor">
             <color red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

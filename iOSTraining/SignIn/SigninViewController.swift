@@ -13,6 +13,7 @@ class SigninViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         emailTextfield.layer.cornerRadius = 10
         emailTextfield.layer.borderWidth = 1
         emailTextfield.layer.borderColor = UIColor.blue.cgColor
@@ -52,24 +53,27 @@ class SigninViewController: UIViewController {
     @IBAction func didTapLoginButton(_ sender: Any) {
         let email = emailTextfield.text ?? ""
         let pass = passwordTextfield.text ?? ""
-        
         print(email)
         print(pass)
         
 //        guard !email.isEmpty, !pass.isEmpty else {
 //            return
 //        }
+        UserDefaults.standard.set(true, forKey: "isLoggedIn")
         
+        guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
         
+        sceneDelegate.showMainScreen(animated: true)
+
         //Push - pop
         //Present - dismiss
-        let productListVC = ProductListViewController()
+//        let productListVC = ProductListViewController()
         
 //        productListVC.modalTransitionStyle = .flipHorizontal
 //        productListVC.modalPresentationStyle = .fullScreen
 //        
 //        self.present(productListVC, animated: true)
-        self.navigationController?.pushViewController(productListVC, animated: true)
+//        self.navigationController?.pushViewController(productListVC, animated: true)
 //        
 //        let vc = TestViewController()
 //        self.navigationController?.pushViewController(vc, animated: true)
