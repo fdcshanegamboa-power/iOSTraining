@@ -94,6 +94,20 @@ class ProductListViewController: UIViewController {
         
         tableView.reloadData()
     }
+    
+    private func showAddedToCartFeedback() {
+        let alert = UIAlertController(
+            title: "Added to Cart",
+            message: nil,
+            preferredStyle: .alert
+        )
+
+        present(alert, animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+            alert.dismiss(animated: true)
+        }
+    }
 }
 
 // MARK: - ProductFetchDelegate
@@ -140,6 +154,26 @@ extension ProductListViewController: UITableViewDataSource, UITableViewDelegate 
         let productDetailVC = ProductDetailViewController()
         productDetailVC.product = selectedProduct
         self.navigationController?.pushViewController(productDetailVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let product = isSearching
+            ? filteredProducts[indexPath.row]
+            : products[indexPath.row]
+
+        let addToCart = UIContextualAction(
+            style: .normal,
+            title: "Add"
+        ) { _, _, completion in
+            CartManager.shared.add(product: product)
+            self.showAddedToCartFeedback()
+            completion(true)
+        }
+
+        addToCart.backgroundColor = .systemGreen
+        addToCart.image = UIImage(systemName: "cart.badge.plus")
+
+        return UISwipeActionsConfiguration(actions: [addToCart])
     }
 }
 
