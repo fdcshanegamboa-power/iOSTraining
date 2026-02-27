@@ -79,15 +79,20 @@ private extension SceneDelegate {
         let tabBar = UITabBarController()
         tabBar.viewControllers = [
             makeProductsTab(),
-            makeSettingsTab()
+            makeCartTab(),
+            makeSettingsTab(),
+            makeProfileTab()
         ]
+
         tabBar.tabBar.tintColor = .systemBlue
+
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
             tabBar.tabBar.standardAppearance = appearance
             tabBar.tabBar.scrollEdgeAppearance = appearance
         }
+
         return tabBar
     }
 
@@ -101,6 +106,35 @@ private extension SceneDelegate {
             title: "Products",
             image: UIImage(systemName: "bag"),
             selectedImage: UIImage(systemName: "bag.fill")
+        )
+        return nav
+    }
+    func makeCartTab() -> UINavigationController {
+        let vc = CartViewController(
+            nibName: String(describing: CartViewController.self),
+            bundle: nil
+        )
+
+        let nav = UINavigationController(rootViewController: vc)
+        nav.tabBarItem = UITabBarItem(
+            title: "Cart",
+            image: UIImage(systemName: "cart"),
+            selectedImage: UIImage(systemName: "cart.fill")
+        )
+        return nav
+    }
+    
+    func makeProfileTab() -> UINavigationController {
+        let vc = ProfileViewController(
+            nibName: String(describing: ProfileViewController.self),
+            bundle: nil
+        )
+
+        let nav = UINavigationController(rootViewController: vc)
+        nav.tabBarItem = UITabBarItem(
+            title: "Profile",
+            image: UIImage(systemName: "person"),
+            selectedImage: UIImage(systemName: "person.fill")
         )
         return nav
     }
