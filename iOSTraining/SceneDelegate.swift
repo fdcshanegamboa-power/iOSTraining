@@ -6,18 +6,26 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    func showLoginScreen(animated: Bool = false) {
-        let loginViewController = SigninViewController(
-            nibName: String(describing: SigninViewController.self),
-            bundle: nil
-        )
+    func showLoginScreen(animated: Bool) {
+        let loginVC = SigninViewController(nibName: "SigninViewController", bundle: nil)
+        let nav = UINavigationController(rootViewController: loginVC)
+        nav.setNavigationBarHidden(true, animated: false)
 
-        setRootViewController(loginViewController, animated: animated)
+        guard let window = window else { return }
+        window.rootViewController = nav
+
+        if animated {
+            UIView.transition(with: window,
+                              duration: 0.35,
+                              options: .transitionCrossDissolve,
+                              animations: nil)
+        }
     }
     
     func showMainScreen(animated: Bool = false) {
@@ -42,6 +50,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             showLoginScreen(animated: false)
 
         }
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -80,10 +89,9 @@ private extension SceneDelegate {
         tabBar.viewControllers = [
             makeProductsTab(),
             makeCartTab(),
-            makeSettingsTab(),
-            makeProfileTab()
+            makeProfileTab(),
+            makeSettingsTab()
         ]
-
         tabBar.tabBar.tintColor = .systemBlue
 
         if #available(iOS 15.0, *) {
@@ -97,6 +105,7 @@ private extension SceneDelegate {
     }
 
     func makeProductsTab() -> UINavigationController {
+        // XIB-based VC — use nibName
         let vc = ProductListViewController(
             nibName: String(describing: ProductListViewController.self),
             bundle: nil
@@ -109,12 +118,11 @@ private extension SceneDelegate {
         )
         return nav
     }
-    func makeCartTab() -> UINavigationController {
-        let vc = CartViewController(
-            nibName: String(describing: CartViewController.self),
-            bundle: nil
-        )
 
+    func makeCartTab() -> UINavigationController {
+        // SwiftUI-based view wrapped in UIHostingController
+        let vc = UIHostingController(rootView: CartView())
+        vc.title = "My Cart"
         let nav = UINavigationController(rootViewController: vc)
         nav.tabBarItem = UITabBarItem(
             title: "Cart",
@@ -123,27 +131,10 @@ private extension SceneDelegate {
         )
         return nav
     }
-    
-    func makeProfileTab() -> UINavigationController {
-        let vc = ProfileViewController(
-            nibName: String(describing: ProfileViewController.self),
-            bundle: nil
-        )
-
-        let nav = UINavigationController(rootViewController: vc)
-        nav.tabBarItem = UITabBarItem(
-            title: "Profile",
-            image: UIImage(systemName: "person"),
-            selectedImage: UIImage(systemName: "person.fill")
-        )
-        return nav
-    }
 
     func makeSettingsTab() -> UINavigationController {
-        let vc = SettingsViewController(
-            nibName: String(describing: SettingsViewController.self),
-            bundle: nil
-        )
+        // Code-based VC — init directly, no nibName
+        let vc = SettingsViewController()
         let nav = UINavigationController(rootViewController: vc)
         nav.tabBarItem = UITabBarItem(
             title: "Settings",
@@ -152,32 +143,38 @@ private extension SceneDelegate {
         )
         return nav
     }
-    
+
+    func makeProfileTab() -> UINavigationController {
+        // XIB-based VC — use nibName
+        let vc = ProfileViewController(
+            nibName: String(describing: ProfileViewController.self),
+            bundle: nil
+        )
+        let nav = UINavigationController(rootViewController: vc)
+        nav.tabBarItem = UITabBarItem(
+            title: "Profile",
+            image: UIImage(systemName: "person"),
+            selectedImage: UIImage(systemName: "person.fill")
+        )
+        return nav
+    }
 }
 
-
+// MARK: - Root VC Transition
 private extension SceneDelegate {
     func setRootViewController(_ viewController: UIViewController, animated: Bool) {
         guard let window else { return }
 
-        let applyRoot = {
-            let wereAnimationsEnabled = UIView.areAnimationsEnabled
-            UIView.setAnimationsEnabled(false)
-            window.rootViewController = viewController
-            window.makeKeyAndVisible()
-            UIView.setAnimationsEnabled(wereAnimationsEnabled)
-        }
+        window.rootViewController = viewController
+        window.makeKeyAndVisible()
 
-        guard animated else {
-            applyRoot()
-            return
-        }
+        guard animated else { return }
 
         UIView.transition(
             with: window,
-            duration: 0.25,
+            duration: 0.35,
             options: .transitionCrossDissolve,
-            animations: applyRoot
+            animations: nil
         )
     }
 }

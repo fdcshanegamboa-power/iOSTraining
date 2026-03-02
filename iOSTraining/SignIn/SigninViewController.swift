@@ -1,82 +1,96 @@
 //
-//  ViewController.swift
+//  SigninViewController.swift
 //  iOSTraining
-//
-//  Created by FDC.Eyan-NC-SA-IOS on 2/24/26.
 //
 
 import UIKit
 
 class SigninViewController: UIViewController {
-    @IBOutlet weak var emailTextfield: UITextField!
+
+    // MARK: - Constants
+    private enum StaticAccount {
+        static let username = "123123123"
+        static let password = "123123123"
+    }
+
+    private enum UserDefaultsKey {
+        static let isLoggedIn    = "isLoggedIn"
+        static let loggedInEmail = "loggedInEmail"
+        static let lastLoginDate = "lastLoginDate"
+    }
+
+    // MARK: - Outlets
+    @IBOutlet weak var emailTextfield:    UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
-    
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        emailTextfield.layer.cornerRadius = 10
-        emailTextfield.layer.borderWidth = 1
-        emailTextfield.layer.borderColor = UIColor.blue.cgColor
-        emailTextfield.layer.masksToBounds = true
-        
-        let emailPaddingView = UIView()
-        emailPaddingView.frame.size = CGSize(
-            width: 10,
-            height: emailTextfield.frame.height
-        )
-        emailTextfield.leftView = emailPaddingView
-        emailTextfield.leftViewMode = .always
-        
-        passwordTextfield.layer.cornerRadius = 10
-        passwordTextfield.layer.borderWidth = 1
-        passwordTextfield.layer.borderColor = UIColor.blue.cgColor
-        passwordTextfield.layer.masksToBounds = true
-        
-        let passwordPaddingView = UIView()
-        passwordPaddingView.frame.size = CGSize(
-            width: 10,
-            height: emailTextfield.frame.height
-        )
-        passwordTextfield.leftView = passwordPaddingView
-        passwordTextfield.leftViewMode = .always
-        // Do any additional setup after loading the view.
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        
+        styleTextField(emailTextfield)
+        styleTextField(passwordTextfield)
     }
 
+    // MARK: - Styling
+    private func styleTextField(_ textField: UITextField) {
+        textField.layer.cornerRadius  = 12
+        textField.layer.borderWidth   = 1.5
+        textField.layer.borderColor   = UIColor.systemBlue.cgColor
+        textField.layer.masksToBounds = true
+
+        let padding = UIView(frame: CGRect(x: 0, y: 0, width: 14, height: textField.frame.height))
+        textField.leftView     = padding
+        textField.leftViewMode = .always
+    }
+
+    // MARK: - Actions
     @IBAction func didTapLoginButton(_ sender: Any) {
-        let email = emailTextfield.text ?? ""
-        let pass = passwordTextfield.text ?? ""
-        print(email)
-        print(pass)
-        
-//        guard !email.isEmpty, !pass.isEmpty else {
-//            return
-//        }
-        UserDefaults.standard.set(true, forKey: "isLoggedIn")
-        
-        guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
-        
-        sceneDelegate.showMainScreen(animated: true)
+        let email    = emailTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let password = passwordTextfield.text ?? ""
 
-        //Push - pop
-        //Present - dismiss
-//        let productListVC = ProductListViewController()
-        
-//        productListVC.modalTransitionStyle = .flipHorizontal
-//        productListVC.modalPresentationStyle = .fullScreen
-//        
-//        self.present(productListVC, animated: true)
-//        self.navigationController?.pushViewController(productListVC, animated: true)
-//        
-//        let vc = TestViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+        guard validateCredentials(email: email, password: password) else {
+            showAlert(title: "Login Failed",
+                      message: "Invalid username or password. Please try again.")
+            return
+        }
+
+        saveSession(email: email)
+        navigateToMain()
+    }
+
+    // MARK: - Validation
+    private func validateCredentials(email: String, password: String) -> Bool {
+        return email == StaticAccount.username && password == StaticAccount.password
+    }
+
+    // MARK: - UserDefaults
+    private func saveSession(email: String) {
+        let defaults = UserDefaults.standard
+        defaults.set(true,          forKey: UserDefaultsKey.isLoggedIn)
+        defaults.set(email,         forKey: UserDefaultsKey.loggedInEmail)
+        defaults.set(Date(),        forKey: UserDefaultsKey.lastLoginDate)
+    }
+
+    static func clearSession() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: UserDefaultsKey.isLoggedIn)
+        defaults.removeObject(forKey: UserDefaultsKey.loggedInEmail)
+        defaults.removeObject(forKey: UserDefaultsKey.lastLoginDate)
+    }
+
+    static func isUserLoggedIn() -> Bool {
+        return UserDefaults.standard.bool(forKey: UserDefaultsKey.isLoggedIn)
+    }
+
+    // MARK: - Navigation
+    private func navigateToMain() {
+        guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
+        sceneDelegate.showMainScreen(animated: true)
+    }
+
+    // MARK: - Helpers
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
-

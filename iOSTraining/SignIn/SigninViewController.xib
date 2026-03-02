@@ -3,7 +3,6 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,87 +18,149 @@
             <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="shoppr." textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="app-name-lbl">
-                    <rect key="frame" x="20" y="160" width="353" height="48"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
-                    <color key="textColor" red="0.13" green="0.13" blue="0.13" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your favourite brands, one tap away." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tagline-lbl">
-                    <rect key="frame" x="20" y="214" width="353" height="17"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" red="0.55000000000000004" green="0.55000000000000004" blue="0.55000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome back" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="welcome-lbl">
-                    <rect key="frame" x="24" y="271" width="345" height="26.333333333333314"/>
-                    <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                    <color key="textColor" red="0.13" green="0.13" blue="0.13" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="14" translatesAutoresizingMaskIntoConstraints="NO" id="form-stack">
-                    <rect key="frame" x="24" y="313.33333333333331" width="345" height="184"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="header-view">
+                    <rect key="frame" x="0.0" y="0.0" width="393" height="260"/>
                     <subviews>
-                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email address" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="email-tf">
-                            <rect key="frame" x="0.0" y="0.0" width="345" height="52"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="52" id="email-h"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
-                        </textField>
-                        <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="16" translatesAutoresizingMaskIntoConstraints="NO" id="pass-tf">
-                            <rect key="frame" x="0.0" y="66" width="345" height="52"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="52" id="pass-h"/>
-                            </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                            <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
-                        </textField>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hello-lbl">
+                            <rect key="frame" x="0.0" y="80" width="393" height="57.333333333333343"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="48"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome Back!" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="welcome-lbl">
+                            <rect key="frame" x="0.0" y="147.33333333333334" width="393" height="21.666666666666657"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.75" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.97254901960784002" green="0.73725490196078003" blue="0.23529411764706001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="hello-lbl" firstAttribute="leading" secondItem="header-view" secondAttribute="leading" id="hello-lead"/>
+                        <constraint firstItem="hello-lbl" firstAttribute="top" secondItem="header-view" secondAttribute="top" constant="80" id="hello-top"/>
+                        <constraint firstItem="hello-lbl" firstAttribute="trailing" secondItem="header-view" secondAttribute="trailing" id="hello-trail"/>
+                        <constraint firstItem="welcome-lbl" firstAttribute="leading" secondItem="header-view" secondAttribute="leading" id="wel-lead"/>
+                        <constraint firstItem="welcome-lbl" firstAttribute="top" secondItem="hello-lbl" secondAttribute="bottom" constant="10" id="wel-top"/>
+                        <constraint firstItem="welcome-lbl" firstAttribute="trailing" secondItem="header-view" secondAttribute="trailing" id="wel-trail"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="card-view">
+                    <rect key="frame" x="0.0" y="230" width="393" height="622"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login Account" textAlignment="center" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="title-lbl">
+                            <rect key="frame" x="24" y="28" width="345" height="28.666666666666671"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="24"/>
+                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sign in to continue shopping your favourite brands." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="subtitle-lbl">
+                            <rect key="frame" x="24" y="62.666666666666679" width="345" height="15.666666666666664"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="form-stack">
+                            <rect key="frame" x="24" y="94.3333333333333" width="345" height="222.66666666666663"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Email Address" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="email-lbl">
+                                    <rect key="frame" x="0.0" y="0.0" width="345" height="16.333333333333332"/>
+                                    <fontDescription key="fontDescription" pointSize="14"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Your Email Address" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="email-tf">
+                                    <rect key="frame" x="0.0" y="32.333333333333371" width="345" height="52"/>
+                                    <color key="backgroundColor" red="0.94999999999999996" green="0.94999999999999996" blue="0.94999999999999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="52" id="email-h"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                                </textField>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Password" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pass-lbl">
+                                    <rect key="frame" x="0.0" y="100.33333333333337" width="345" height="16.333333333333329"/>
+                                    <fontDescription key="fontDescription" pointSize="14"/>
+                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="••••••••••••" minimumFontSize="15" translatesAutoresizingMaskIntoConstraints="NO" id="pass-tf">
+                                    <rect key="frame" x="0.0" y="132.66666666666669" width="345" height="52"/>
+                                    <color key="backgroundColor" red="0.94999999999999996" green="0.94999999999999996" blue="0.94999999999999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="52" id="pass-h"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                    <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
+                                </textField>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="forgot-btn">
+                                    <rect key="frame" x="0.0" y="200.66666666666669" width="345" height="22"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="22" id="forgot-h"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" pointSize="14"/>
+                                    <state key="normal" title="Forgot Password?">
+                                        <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </state>
+                                </button>
+                            </subviews>
+                        </stackView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="login-btn">
-                            <rect key="frame" x="0.0" y="132" width="345" height="52"/>
-                            <color key="backgroundColor" systemColor="systemBlueColor"/>
+                            <rect key="frame" x="24" y="337" width="345" height="54"/>
+                            <color key="backgroundColor" red="0.97254901960784002" green="0.73725490196078003" blue="0.23529411764706001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="52" id="login-h"/>
+                                <constraint firstAttribute="height" constant="54" id="login-h"/>
                             </constraints>
-                            <state key="normal" title="Log In"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <state key="normal" title="Login Account">
+                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
                             <connections>
                                 <action selector="didTapLoginButton:" destination="-1" eventType="touchUpInside" id="login-action"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="register-btn">
+                            <rect key="frame" x="24" y="411" width="345" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="register-h"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" pointSize="16"/>
+                            <state key="normal" title="Create New Account">
+                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                        </button>
                     </subviews>
-                </stackView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New here? Create a free account" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="signup-lbl">
-                    <rect key="frame" x="20" y="795" width="353" height="17"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                    <color key="textColor" red="1" green="0.41999999999999998" blue="0.20999999999999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="form-stack" firstAttribute="leading" secondItem="card-view" secondAttribute="leading" constant="24" id="form-lead"/>
+                        <constraint firstItem="form-stack" firstAttribute="top" secondItem="subtitle-lbl" secondAttribute="bottom" constant="16" id="form-top"/>
+                        <constraint firstItem="form-stack" firstAttribute="trailing" secondItem="card-view" secondAttribute="trailing" constant="-24" id="form-trail"/>
+                        <constraint firstItem="login-btn" firstAttribute="leading" secondItem="card-view" secondAttribute="leading" constant="24" id="login-lead"/>
+                        <constraint firstItem="login-btn" firstAttribute="top" secondItem="form-stack" secondAttribute="bottom" constant="20" id="login-top"/>
+                        <constraint firstItem="login-btn" firstAttribute="trailing" secondItem="card-view" secondAttribute="trailing" constant="-24" id="login-trail"/>
+                        <constraint firstItem="register-btn" firstAttribute="leading" secondItem="card-view" secondAttribute="leading" constant="24" id="reg-lead"/>
+                        <constraint firstItem="register-btn" firstAttribute="top" secondItem="login-btn" secondAttribute="bottom" constant="20" id="reg-top"/>
+                        <constraint firstItem="register-btn" firstAttribute="trailing" secondItem="card-view" secondAttribute="trailing" constant="-24" id="reg-trail"/>
+                        <constraint firstItem="subtitle-lbl" firstAttribute="leading" secondItem="card-view" secondAttribute="leading" constant="24" id="sub-lead"/>
+                        <constraint firstItem="subtitle-lbl" firstAttribute="top" secondItem="title-lbl" secondAttribute="bottom" constant="6" id="sub-top"/>
+                        <constraint firstItem="subtitle-lbl" firstAttribute="trailing" secondItem="card-view" secondAttribute="trailing" constant="-24" id="sub-trail"/>
+                        <constraint firstItem="title-lbl" firstAttribute="leading" secondItem="card-view" secondAttribute="leading" constant="24" id="title-lead"/>
+                        <constraint firstItem="title-lbl" firstAttribute="top" secondItem="card-view" secondAttribute="top" constant="28" id="title-top"/>
+                        <constraint firstItem="title-lbl" firstAttribute="trailing" secondItem="card-view" secondAttribute="trailing" constant="-24" id="title-trail"/>
+                    </constraints>
+                </view>
             </subviews>
-            <color key="backgroundColor" red="0.98999999999999999" green="0.97999999999999998" blue="0.96999999999999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.98039215686275005" green="0.96078431372549" blue="0.89411764705882002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="form-stack" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" constant="24" id="form-lead"/>
-                <constraint firstItem="form-stack" firstAttribute="top" secondItem="welcome-lbl" secondAttribute="bottom" constant="16" id="form-top"/>
-                <constraint firstAttribute="trailing" secondItem="form-stack" secondAttribute="trailing" constant="24" id="form-trail"/>
-                <constraint firstItem="app-name-lbl" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" constant="20" id="name-lead"/>
-                <constraint firstItem="app-name-lbl" firstAttribute="top" secondItem="root-view" secondAttribute="top" constant="160" id="name-top"/>
-                <constraint firstAttribute="trailing" secondItem="app-name-lbl" secondAttribute="trailing" constant="20" id="name-trail"/>
-                <constraint firstAttribute="bottom" secondItem="signup-lbl" secondAttribute="bottom" constant="40" id="sgn-bot"/>
-                <constraint firstItem="signup-lbl" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" constant="20" id="sgn-lead"/>
-                <constraint firstAttribute="trailing" secondItem="signup-lbl" secondAttribute="trailing" constant="20" id="sgn-trail"/>
-                <constraint firstItem="tagline-lbl" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" constant="20" id="tag-lead"/>
-                <constraint firstItem="tagline-lbl" firstAttribute="top" secondItem="app-name-lbl" secondAttribute="bottom" constant="6" id="tag-top"/>
-                <constraint firstAttribute="trailing" secondItem="tagline-lbl" secondAttribute="trailing" constant="20" id="tag-trail"/>
-                <constraint firstItem="welcome-lbl" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" constant="24" id="wel-lead"/>
-                <constraint firstItem="welcome-lbl" firstAttribute="top" secondItem="tagline-lbl" secondAttribute="bottom" constant="40" id="wel-top"/>
-                <constraint firstAttribute="trailing" secondItem="welcome-lbl" secondAttribute="trailing" constant="24" id="wel-trail"/>
+                <constraint firstItem="card-view" firstAttribute="bottom" secondItem="root-view" secondAttribute="bottom" id="card-bot"/>
+                <constraint firstItem="card-view" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" id="card-lead"/>
+                <constraint firstItem="card-view" firstAttribute="top" secondItem="header-view" secondAttribute="bottom" constant="-30" id="card-top"/>
+                <constraint firstItem="card-view" firstAttribute="trailing" secondItem="root-view" secondAttribute="trailing" id="card-trail"/>
+                <constraint firstItem="header-view" firstAttribute="height" constant="260" id="hdr-h"/>
+                <constraint firstItem="header-view" firstAttribute="leading" secondItem="root-view" secondAttribute="leading" id="hdr-lead"/>
+                <constraint firstItem="header-view" firstAttribute="top" secondItem="root-view" secondAttribute="top" id="hdr-top"/>
+                <constraint firstItem="header-view" firstAttribute="trailing" secondItem="root-view" secondAttribute="trailing" id="hdr-trail"/>
             </constraints>
             <point key="canvasLocation" x="13" y="20"/>
         </view>
     </objects>
-    <resources>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>
