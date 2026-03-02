@@ -2,13 +2,14 @@
 //  CartView.swift
 //  iOSTraining
 //
-// Cart/Views/CartView.swift
 
 import SwiftUI
 
 struct CartView: View {
     @State private var viewModel = CartViewModel()
     @State private var promoCode: String = ""
+    
+    private let primaryColor = Color(red: 248/255, green: 188/255, blue: 60/255)
 
     var body: some View {
         Group {
@@ -19,7 +20,12 @@ struct CartView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            checkoutBar
+            if !viewModel.isEmpty {
+                VStack(spacing: 0) {
+                    orderSummarySection
+                    checkoutBar
+                }
+            }
         }
         .confirmationDialog(
             "Ready to purchase these items?",
@@ -27,42 +33,101 @@ struct CartView: View {
             titleVisibility: .visible
         ) {
             Button("Confirm Purchase") {
-                print("Purchase Confirmed!")
+                viewModel.confirmCheckout()
             }
             Button("Cancel", role: .cancel) {}
         }
-
     }
 
     // MARK: - Cart Content
 
     private var cartContent: some View {
-        ScrollView {
-            LazyVStack(spacing: 12) {
-                HStack {
-                    Text("\(viewModel.totalItems) Items")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                }
-                
-                
-                ForEach(viewModel.items) { item in
-                    CartRowView(item: item) { newQuantity in
-                        viewModel.updateQuantity(for: item, newQuantity: newQuantity)
-                    } onDelete: {
-                        viewModel.removeItem(item)
+        VStack(spacing: 0) {
+            searchBar
+            selectAllBar
+            
+            ScrollView {
+                LazyVStack(spacing: 12) {
+                    ForEach(viewModel.items) { item in
+                        CartRowView(
+                            item: item,
+                            primaryColor: primaryColor
+                        ) { newQuantity in
+                            viewModel.updateQuantity(for: item, newQuantity: newQuantity)
+                        } onDelete: {
+                            viewModel.removeItem(item)
+                        } onToggleSelection: {
+                            viewModel.toggleSelection(for: item)
+                        }
                     }
                 }
-
-                promoCodeField
-                orderSummary
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 280) // space for summary + checkout
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 120) // space for checkout bar
+            .background(Color(.systemGroupedBackground))
         }
-        .background(Color(.systemGroupedBackground))
+    }
+
+    // MARK: - Search Bar
+
+    private var searchBar: some View {
+        HStack(spacing: 12) {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                
+                TextField("Search products...", text: $viewModel.searchText)
+                    .textInputAutocapitalization(.never)
+                
+                if !viewModel.searchText.isEmpty {
+                    Button {
+                        viewModel.searchText = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+            .padding(10)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(.regularMaterial)
+    }
+
+    // MARK: - Select All Bar
+
+    private var selectAllBar: some View {
+        HStack {
+            Button {
+                viewModel.toggleSelectAll()
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: viewModel.allSelected ? "checkmark.square.fill" : "square")
+                        .foregroundStyle(viewModel.allSelected ? primaryColor : .secondary)
+                        .font(.title3)
+                    
+                    Text("Select All")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+            }
+            .buttonStyle(.plain)
+            
+            Spacer()
+            
+            if viewModel.hasSelectedItems {
+                Text("\(viewModel.totalItems) selected")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(Color(.systemBackground))
     }
 
     // MARK: - Empty State
@@ -75,50 +140,62 @@ struct CartView: View {
         )
     }
 
-    // MARK: - Promo Code
+    // MARK: - Order Summary Section
 
-    private var promoCodeField: some View {
-        HStack {
-            Image(systemName: "tag.circle")
-                .foregroundStyle(.secondary)
-                .font(.title3)
-
-            TextField("Enter your promo code", text: $promoCode)
-                .font(.subheadline)
-
-            Spacer()
-
-            Image(systemName: "chevron.right")
-                .foregroundStyle(.secondary)
-                .font(.caption)
-        }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-
-    // MARK: - Order Summary
-
-    private var orderSummary: some View {
-        VStack(spacing: 12) {
-            summaryRow(label: "Subtotal", value: viewModel.totalPrice)
+    private var orderSummarySection: some View {
+        VStack(spacing: 0) {
             Divider()
-            summaryRow(label: "Shipping", value: 4.00)
-            Divider()
-
-            HStack {
-                Text("Total amount")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                Spacer()
-                Text("$\(viewModel.totalPrice + 4.00, specifier: "%.2f")")
-                    .font(.headline)
-                    .fontWeight(.bold)
+            
+            VStack(spacing: 0) {
+                Button {
+                    withAnimation(.spring(response: 0.3)) {
+                        viewModel.toggleSummary()
+                    }
+                } label: {
+                    HStack {
+                        Text("Order Summary")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        
+                        Spacer()
+                        
+                        Image(systemName: viewModel.isSummaryExpanded ? "chevron.down" : "chevron.up")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                
+                if viewModel.isSummaryExpanded {
+                    VStack(spacing: 12) {
+                        Divider()
+                        
+                        summaryRow(label: "Subtotal", value: viewModel.totalPrice)
+                        summaryRow(label: "Shipping", value: 4.00)
+                        summaryRow(label: "Tax", value: viewModel.totalPrice * 0.1)
+                        
+                        Divider()
+                        
+                        HStack {
+                            Text("Total")
+                                .font(.headline)
+                                .fontWeight(.bold)
+                            Spacer()
+                            Text("$\(viewModel.totalPrice + 4.00 + (viewModel.totalPrice * 0.1), specifier: "%.2f")")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundStyle(primaryColor)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 12)
+                }
             }
+            .background(.regularMaterial)
         }
-        .padding(16)
-        .background(Color(.systemBackground))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 
     private func summaryRow(label: String, value: Double) -> some View {
@@ -136,25 +213,22 @@ struct CartView: View {
     // MARK: - Checkout Bar
 
     private var checkoutBar: some View {
-        VStack(spacing: 0) {
-            Divider()
-            Button {
-                viewModel.checkout()
-            } label: {
-                Text("Proceed to Checkout")
-                    .font(.headline)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 56)
-                    .background(Color.blue)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 8)
-            .background(.regularMaterial)
+        Button {
+            viewModel.checkout()
+        } label: {
+            Text("Proceed to Checkout")
+                .font(.headline)
+                .fontWeight(.semibold)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 56)
+                .background(viewModel.hasSelectedItems ? primaryColor : Color.gray)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
         }
+        .disabled(!viewModel.hasSelectedItems)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.regularMaterial)
     }
 }
 

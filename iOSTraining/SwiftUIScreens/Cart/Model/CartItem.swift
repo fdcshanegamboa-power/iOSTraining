@@ -2,23 +2,30 @@
 //  CartItem.swift
 //  iOSTraining
 //
-//  Created by Shane Gamboa - INTERN on 3/2/26.
-// Cart/Model/CartItem.swift
 
 import Foundation
 
-struct CartItem: Identifiable {
+struct CartItem: Identifiable, Codable {//, Equatable {
     let id: UUID
     let product: Product
     var quantity: Int
-    
-    init(product: Product, quantity: Int = 1) {
-        self.id = UUID()
-        self.product = product
-        self.quantity = quantity
-    }
+    var isSelected: Bool
     
     var subtotal: Double {
         product.price * Double(quantity)
     }
+    
+    init(product: Product, quantity: Int = 1, isSelected: Bool = false) {
+        self.id = UUID()
+        self.product = product
+        self.quantity = quantity
+        self.isSelected = isSelected
+    }
+    
+//    static func == (lhs: CartItem, rhs: CartItem) -> Bool {
+//        lhs.id == rhs.id &&
+//        lhs.product.id == rhs.product.id &&
+//        lhs.quantity == rhs.quantity &&
+//        lhs.isSelected == rhs.isSelected
+//    }
 }

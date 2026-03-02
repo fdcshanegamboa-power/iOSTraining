@@ -92,11 +92,31 @@ private extension SceneDelegate {
             makeProfileTab(),
             makeSettingsTab()
         ]
-        tabBar.tabBar.tintColor = .systemBlue
+        
+        // Primary color from your design
+        let primaryColor = UIColor(red: 0.97, green: 0.74, blue: 0.24, alpha: 1.0) // #f8bc3c
+        tabBar.tabBar.tintColor = primaryColor
+        tabBar.tabBar.unselectedItemTintColor = primaryColor.withAlphaComponent(0.4)
 
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
             appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .white
+            
+            // Selected state
+            let selectedAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: primaryColor
+            ]
+            appearance.stackedLayoutAppearance.selected.iconColor = primaryColor
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = selectedAttributes
+            
+            // Normal state
+            let normalAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: primaryColor.withAlphaComponent(0.4)
+            ]
+            appearance.stackedLayoutAppearance.normal.iconColor = primaryColor.withAlphaComponent(0.4)
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = normalAttributes
+            
             tabBar.tabBar.standardAppearance = appearance
             tabBar.tabBar.scrollEdgeAppearance = appearance
         }
