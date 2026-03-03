@@ -69,8 +69,6 @@ struct CartView: View {
         }
     }
 
-    // MARK: - Search Bar
-
     private var searchBar: some View {
         HStack(spacing: 12) {
             HStack {

@@ -37,20 +37,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
+        window = UIWindow(windowScene: windowScene)
         
-        
-
-        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
-        if isLoggedIn == true {
-            let tabBarController = makeTabBarController()
-            setRootViewController(tabBarController, animated: true)
-        }else {
+        if SigninViewController.isUserLoggedIn() {
+            showMainScreen(animated: false)
+        } else {
             showLoginScreen(animated: false)
-
         }
-        window.makeKeyAndVisible()
+        
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

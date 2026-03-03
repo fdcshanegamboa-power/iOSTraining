@@ -20,7 +20,6 @@ class ProductListViewController: UIViewController {
     var filteredProducts: [Product] = []
     var isSearching: Bool = false
     
-    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Products"
@@ -30,7 +29,6 @@ class ProductListViewController: UIViewController {
         fetchProducts()
     }
     
-    // MARK: - Setup
     private func setupTableView() {
         let nib = UINib(nibName: cellIdentifier, bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: cellIdentifier)
@@ -47,7 +45,6 @@ class ProductListViewController: UIViewController {
         NetworkManager.shared.fetchProducts()
     }
     
-    // MARK: - Sort
     @IBAction func didTapSort(_ sender: UIButton) {
         let menu = UIMenu(title: "Sort Products", children: [
             UIAction(title: "Name (A-Z)", image: UIImage(systemName: "textformat.abc")) { _ in
@@ -110,7 +107,6 @@ class ProductListViewController: UIViewController {
     }
 }
 
-// MARK: - ProductFetchDelegate
 extension ProductListViewController: ProductFetchDelegate {
     
     func didFetchProducts(_ products: [Product]) {
@@ -133,7 +129,6 @@ extension ProductListViewController: ProductFetchDelegate {
     }
 }
 
-// MARK: - UITableViewDataSource & UITableViewDelegate
 extension ProductListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -177,7 +172,6 @@ extension ProductListViewController: UITableViewDataSource, UITableViewDelegate 
     }
 }
 
-// MARK: - UISearchBarDelegate
 extension ProductListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

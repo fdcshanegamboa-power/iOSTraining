@@ -52,7 +52,7 @@ class ProductDetailViewController: UIViewController {
         setupNavigationBar()
         setupCollectionView()
         setupPageControl()
-        setupProgrammaticBottomBar()   // ← replaces setupBottomBar()
+        setupProgrammaticBottomBar()
         setupScrollViewInset()
         setupLabels()
         displayProductDetails()
@@ -124,36 +124,19 @@ class ProductDetailViewController: UIViewController {
         pageControl.currentPageIndicatorTintColor = primaryColor
     }
 
-    // MARK: - Programmatic Bottom Bar
-    //
-    // Built entirely in code and pinned to the view (not the XIB scroll view),
-    // with its BOTTOM anchored to view.safeAreaLayoutGuide.bottomAnchor.
-    //
-    // Because UITabBarController sets the safeAreaInsets.bottom to sit just
-    // above the tab bar, this guarantee the bar is always visible regardless
-    // of device size or tab bar height — exactly like CartView's .safeAreaInset.
-
     private func setupProgrammaticBottomBar() {
-        // Hide the XIB bottom bar so it doesn't fight with our programmatic one
         bottomBarView?.isHidden = true
 
-        // ── Container ──────────────────────────────────────────────────────────
         bottomBar.backgroundColor = .systemGroupedBackground
         bottomBar.translatesAutoresizingMaskIntoConstraints = false
 
-        // Upward shadow so it feels elevated above content
         bottomBar.layer.shadowColor   = UIColor.black.cgColor
         bottomBar.layer.shadowOpacity = 0.08
         bottomBar.layer.shadowRadius  = 12
         bottomBar.layer.shadowOffset  = CGSize(width: 0, height: -4)
         bottomBar.clipsToBounds       = false
 
-        // Top divider
-//        let divider = UIView()
-//        divider.backgroundColor = UIColor.systemGray5
-//        divider.translatesAutoresizingMaskIntoConstraints = false
 
-        // ── Add to Cart button ─────────────────────────────────────────────────
         cartButton.setTitle("Add to Cart", for: .normal)
         cartButton.titleLabel?.font   = .systemFont(ofSize: 16, weight: .bold)
         cartButton.setTitleColor(primaryColor, for: .normal)
@@ -165,7 +148,6 @@ class ProductDetailViewController: UIViewController {
         cartButton.translatesAutoresizingMaskIntoConstraints = false
         cartButton.addTarget(self, action: #selector(didTapAddToCart(_:)), for: .touchUpInside)
 
-        // ── Buy Now button ─────────────────────────────────────────────────────
         buyNowButton.setTitle("Buy Now", for: .normal)
         buyNowButton.titleLabel?.font   = .systemFont(ofSize: 16, weight: .bold)
         buyNowButton.setTitleColor(nearBlack, for: .normal)
@@ -175,29 +157,17 @@ class ProductDetailViewController: UIViewController {
         buyNowButton.translatesAutoresizingMaskIntoConstraints = false
         buyNowButton.addTarget(self, action: #selector(didTapBuyNow(_:)), for: .touchUpInside)
 
-        // ── View hierarchy ─────────────────────────────────────────────────────
         view.addSubview(bottomBar)
-//        bottomBar.addSubview(divider)
         bottomBar.addSubview(cartButton)
         bottomBar.addSubview(buyNowButton)
 
-        // ── Constraints ────────────────────────────────────────────────────────
         let safeArea = view.safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            // Bar: pin left/right to view edges, bottom to SAFE AREA bottom
-            // (safeAreaLayoutGuide.bottom is already above the tab bar)
             bottomBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             bottomBar.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
 
-            // Top divider
-//            divider.topAnchor.constraint(equalTo: bottomBar.topAnchor),
-//            divider.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor),
-//            divider.trailingAnchor.constraint(equalTo: bottomBar.trailingAnchor),
-//            divider.heightAnchor.constraint(equalToConstant: 1),
-
-            // Buttons — 16pt vertical padding inside the bar
             cartButton.topAnchor.constraint(equalTo: bottomBar.topAnchor, constant: 16),
             cartButton.leadingAnchor.constraint(equalTo: bottomBar.leadingAnchor, constant: 16),
             cartButton.bottomAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: -16),
@@ -209,16 +179,10 @@ class ProductDetailViewController: UIViewController {
             buyNowButton.bottomAnchor.constraint(equalTo: bottomBar.bottomAnchor, constant: -16),
             buyNowButton.heightAnchor.constraint(equalToConstant: 52),
 
-            // Buy Now is 1.1× the width of Add to Cart
             buyNowButton.widthAnchor.constraint(equalTo: cartButton.widthAnchor, multiplier: 1.1),
         ])
     }
-
-    // MARK: - Scroll View Inset
-    //
-    // Push the scroll view's content bottom inset up by the bar's height so the
-    // last content isn't hidden behind the bar when fully scrolled down.
-
+    
     private func setupScrollViewInset() {
         guard let scrollView = view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView else { return }
         scrollView.contentInsetAdjustmentBehavior = .never
@@ -227,13 +191,11 @@ class ProductDetailViewController: UIViewController {
     private func updateScrollViewInset() {
         guard let scrollView = view.subviews.first(where: { $0 is UIScrollView }) as? UIScrollView else { return }
         let barHeight = bottomBar.frame.height == 0
-            ? (52 + 32 + view.safeAreaInsets.bottom) // fallback before first layout
+            ? (52 + 32 + view.safeAreaInsets.bottom)
             : bottomBar.frame.height
         scrollView.contentInset.bottom        = barHeight
         scrollView.verticalScrollIndicatorInsets.bottom = barHeight
     }
-
-    // MARK: - Card Panel Rounding
 
     private func roundCardPanel() {
         guard
@@ -249,13 +211,10 @@ class ProductDetailViewController: UIViewController {
         cardPanel.layer.masksToBounds = true
     }
 
-    // MARK: - Badge Helpers
 
     private func applyPillBadge(_ label: UILabel, tint: UIColor) {
         label.layer.cornerRadius = 8
         label.clipsToBounds      = true
-        label.backgroundColor    = tint.withAlphaComponent(0.15)
-        label.textColor          = tint.darkened(by: 0.10)
         label.textAlignment      = .center
     }
 
@@ -308,12 +267,12 @@ class ProductDetailViewController: UIViewController {
 
         productNameLabel.text  = product.title
         brandLabel.text        = product.brand ?? "Unknown Brand"
-        productPriceLabel.text = product.price.formatted(.currency(code: "PHP"))
+        productPriceLabel.text = product.price.formatted(.currency(code: "USD").locale(Locale(identifier: "en_US")))
 
-        ratingLabel.text = "⭐  \(String(format: "%.1f", product.rating))  rating"
+        ratingLabel.text = "  \(String(format: "%.1f", product.rating))  rating "
         applyPillBadge(ratingLabel, tint: UIColor(red: 1.0, green: 0.75, blue: 0.0, alpha: 1))
 
-        stockLabel.text = "📦  \(product.stock) in stock"
+        stockLabel.text = "  \(product.stock) in stock "
         if product.stock < 10 {
             applyPillBadge(stockLabel, tint: .systemRed)
         } else {
@@ -337,7 +296,6 @@ class ProductDetailViewController: UIViewController {
         productDescriptionTextView.text = product.description
     }
 
-    // MARK: - Labels Setup
 
     private func setupLabels() {
         productNameLabel.font  = .systemFont(ofSize: 24, weight: .bold)
@@ -355,7 +313,6 @@ class ProductDetailViewController: UIViewController {
         categoryLabel.font = .systemFont(ofSize: 11, weight: .semibold)
     }
 
-    // MARK: - Animations
 
     private func animateContent() {
         let views: [UIView] = [
@@ -392,7 +349,6 @@ class ProductDetailViewController: UIViewController {
         }
     }
 
-    // MARK: - Button Actions
 
     @IBAction func didTapAddToCart(_ sender: UIButton) {
         animateButtonTap(sender)
@@ -438,7 +394,6 @@ class ProductDetailViewController: UIViewController {
     }
 }
 
-// MARK: - UIColor + Darkening
 
 private extension UIColor {
     func darkened(by amount: CGFloat = 0.2) -> UIColor {
@@ -453,7 +408,6 @@ private extension UIColor {
     }
 }
 
-// MARK: - UICollectionViewDataSource
 
 extension ProductDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,

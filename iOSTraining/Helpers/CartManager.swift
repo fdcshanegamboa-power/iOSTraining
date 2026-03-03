@@ -11,15 +11,24 @@ class CartManager {
     static let shared = CartManager()
 
     private let defaults = UserDefaults.standard
-    private let cartKey = "saved_cart_items"
-    
     private init(){
         self.items = load()
     }
 
     private(set) var items: [CartItem] = []
     
+    private var cartKey: String {
+        guard let userId = UserManager.shared.currentUser?.id else {
+            return "guest_cart"
+        }
+        return "cart_\(userId)"
+    }
+    
     func add(product: Product) {
+        guard UserManager.shared.isLoggedIn else {
+            print("⚠️ User not logged in. Cannot add to cart.")
+            return
+        }
         if let index = items.firstIndex(where: { $0.product.id == product.id }) {
             items[index].quantity += 1
         } else {
@@ -71,6 +80,10 @@ class CartManager {
     func clear() {
         items.removeAll()
         save()
+    }
+    
+    func reloadCart(){
+        self.items = load()
     }
 
     var totalItems: Int {

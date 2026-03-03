@@ -71,13 +71,11 @@ class SettingsViewController: UIViewController {
     }
 
     private func performLogout() {
-        // 1. Clear the stored session
-        SigninViewController.clearSession()
-        CartManager.shared.clear()
-
-        // 2. Tell SceneDelegate to show the login screen
+        
+        UserManager.shared.logout()
+        
         guard let sceneDelegate = view.window?.windowScene?.delegate as? SceneDelegate else { return }
-        sceneDelegate.showLoginScreen(animated: true)
+        sceneDelegate.showLoginScreen(animated: false)
     }
 }
 

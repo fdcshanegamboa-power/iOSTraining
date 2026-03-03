@@ -7,18 +7,6 @@ import UIKit
 
 class SigninViewController: UIViewController {
 
-    // MARK: - Constants
-    private enum StaticAccount {
-        static let username = "123123123"
-        static let password = "123123123"
-    }
-
-    private enum UserDefaultsKey {
-        static let isLoggedIn    = "isLoggedIn"
-        static let loggedInEmail = "loggedInEmail"
-        static let lastLoginDate = "lastLoginDate"
-    }
-
     // MARK: - Outlets
     @IBOutlet weak var emailTextfield:    UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
@@ -44,41 +32,30 @@ class SigninViewController: UIViewController {
 
     // MARK: - Actions
     @IBAction func didTapLoginButton(_ sender: Any) {
-        let email    = emailTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let username = emailTextfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextfield.text ?? ""
-
-        guard validateCredentials(email: email, password: password) else {
-            showAlert(title: "Login Failed",
-                      message: "Invalid username or password. Please try again.")
+        
+        
+        guard !username.isEmpty, !password.isEmpty else {
+            showAlert(title: "Login Failed", message: "Please enter both username and password.")
             return
         }
-
-        saveSession(email: email)
-        navigateToMain()
+        
+        let success = UserManager.shared.login(username: username, password: password)
+        
+        if success {
+            navigateToMain()
+        } else {
+            showAlert(title: "Login Failed", message: "Invalid username or password. Please try again.")
+        }
     }
-
-    // MARK: - Validation
-    private func validateCredentials(email: String, password: String) -> Bool {
-        return email == StaticAccount.username && password == StaticAccount.password
-    }
-
-    // MARK: - UserDefaults
-    private func saveSession(email: String) {
-        let defaults = UserDefaults.standard
-        defaults.set(true,          forKey: UserDefaultsKey.isLoggedIn)
-        defaults.set(email,         forKey: UserDefaultsKey.loggedInEmail)
-        defaults.set(Date(),        forKey: UserDefaultsKey.lastLoginDate)
-    }
-
-    static func clearSession() {
-        let defaults = UserDefaults.standard
-        defaults.removeObject(forKey: UserDefaultsKey.isLoggedIn)
-        defaults.removeObject(forKey: UserDefaultsKey.loggedInEmail)
-        defaults.removeObject(forKey: UserDefaultsKey.lastLoginDate)
+    
+    static func logout() {
+        UserManager.shared.logout()
     }
 
     static func isUserLoggedIn() -> Bool {
-        return UserDefaults.standard.bool(forKey: UserDefaultsKey.isLoggedIn)
+        return UserManager.shared.isLoggedIn
     }
 
     // MARK: - Navigation
