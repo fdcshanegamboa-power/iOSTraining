@@ -135,10 +135,13 @@ private extension SceneDelegate {
     }
 
     func makeCartTab() -> UINavigationController {
-        // SwiftUI-based view wrapped in UIHostingController
-        let vc = UIHostingController(rootView: CartView())
+        // SwiftUI-based view wrapped in UIHostingController with NavigationStack
+        let vc = UIHostingController(rootView: NavigationStack {
+            CartView()
+        })
         vc.title = "My Cart"
         let nav = UINavigationController(rootViewController: vc)
+        nav.setNavigationBarHidden(true, animated: false) // Hide UIKit nav bar, use SwiftUI NavigationStack
         nav.tabBarItem = UITabBarItem(
             title: "Cart",
             image: UIImage(systemName: "cart"),

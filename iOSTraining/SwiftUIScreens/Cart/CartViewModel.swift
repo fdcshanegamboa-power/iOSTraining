@@ -11,7 +11,7 @@ final class CartViewModel {
     private let repository: CartRepositoryProtocol
     private let service: CartServiceProtocol
     
-    var showingCheckoutAlert = false
+    var showingCheckoutView = false
     var searchText = ""
     var isSummaryExpanded = true
     
@@ -75,11 +75,6 @@ final class CartViewModel {
     
     func checkout() {
         guard hasSelectedItems else { return }
-        showingCheckoutAlert = true
-    }
-    
-    func confirmCheckout() {
-        service.checkout()
-        showingCheckoutAlert = false
+        showingCheckoutView = true
     }
 }

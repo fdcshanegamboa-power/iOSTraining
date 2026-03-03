@@ -9,6 +9,9 @@ import SwiftUI
 
 struct ProfileView: View {
     @State private var viewModel = UserViewModel()
+    @State private var showingAddAddressSheet = false
+    @State private var showingEditAddressSheet = false
+    @State private var addressToEdit: Address?
     
     private let primaryColor = Color(red: 248/255, green: 188/255, blue: 60/255)
     
@@ -33,6 +36,20 @@ struct ProfileView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.saveMessage)
+        }
+        .sheet(isPresented: $showingAddAddressSheet) {
+            AddAddressView {
+                // Refresh after address is added
+                viewModel = UserViewModel()
+            }
+        }
+        .sheet(isPresented: $showingEditAddressSheet) {
+            if let address = addressToEdit {
+                EditAddressView(address: address) {
+                    // Refresh after address is updated
+                    viewModel = UserViewModel()
+                }
+            }
         }
     }
     
@@ -154,6 +171,52 @@ struct ProfileView: View {
             if viewModel.hasAddress {
                 ForEach(viewModel.allAddresses) { address in
                     addressRow(address)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            addressToEdit = address
+                            showingEditAddressSheet = true
+                        }
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                            Button(role: .destructive) {
+                                viewModel.removeAddress(withId: address.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
+                        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                            if !address.isDefault {
+                                Button {
+                                    viewModel.setDefaultAddress(withId: address.id)
+                                } label: {
+                                    Label("Set Default", systemImage: "star.fill")
+                                }
+                                .tint(primaryColor)
+                            }
+                        }
+                        .contextMenu {
+                            Button {
+                                addressToEdit = address
+                                showingEditAddressSheet = true
+                            } label: {
+                                Label("Edit", systemImage: "pencil")
+                            }
+                            
+                            if !address.isDefault {
+                                Button {
+                                    viewModel.setDefaultAddress(withId: address.id)
+                                } label: {
+                                    Label("Set as Default", systemImage: "star.fill")
+                                }
+                            }
+                            
+                            Divider()
+                            
+                            Button(role: .destructive) {
+                                viewModel.removeAddress(withId: address.id)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                 }
             } else {
                 HStack {
@@ -161,6 +224,17 @@ struct ProfileView: View {
                         .foregroundStyle(.secondary)
                     Text("No address added")
                         .foregroundStyle(.secondary)
+                }
+            }
+            
+            Button {
+                showingAddAddressSheet = true
+            } label: {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                        .foregroundStyle(primaryColor)
+                    Text("Add New Address")
+                        .foregroundStyle(primaryColor)
                 }
             }
         } header: {
@@ -173,6 +247,9 @@ struct ProfileView: View {
                         .foregroundStyle(primaryColor)
                 }
             }
+        } footer: {
+            Text("Tap to edit • Swipe right to set default • Swipe left to delete")
+                .font(.caption)
         }
     }
     

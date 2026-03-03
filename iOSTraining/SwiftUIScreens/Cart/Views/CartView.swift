@@ -33,15 +33,8 @@ struct CartView: View {
                 }
             }
         }
-        .confirmationDialog(
-            "Ready to purchase these items?",
-            isPresented: $viewModel.showingCheckoutAlert,
-            titleVisibility: .visible
-        ) {
-            Button("Confirm Purchase") {
-                viewModel.confirmCheckout()
-            }
-            Button("Cancel", role: .cancel) {}
+        .navigationDestination(isPresented: $viewModel.showingCheckoutView) {
+            CheckoutView()
         }
     }
 
