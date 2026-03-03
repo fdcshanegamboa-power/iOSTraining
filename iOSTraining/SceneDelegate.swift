@@ -160,11 +160,9 @@ private extension SceneDelegate {
     }
 
     func makeProfileTab() -> UINavigationController {
-        // XIB-based VC — use nibName
-        let vc = ProfileViewController(
-            nibName: String(describing: ProfileViewController.self),
-            bundle: nil
-        )
+        // SwiftUI-based view wrapped in UIHostingController
+        let vc = UIHostingController(rootView: ProfileView())
+        vc.title = "Profile"
         let nav = UINavigationController(rootViewController: vc)
         nav.tabBarItem = UITabBarItem(
             title: "Profile",
