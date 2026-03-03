@@ -60,6 +60,16 @@ class ProductDetailViewController: UIViewController {
 
         productDescriptionTextView.textContainerInset = .zero
         productDescriptionTextView.textContainer.lineFragmentPadding = 0
+        
+        // Enhanced text readability with better line spacing
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5
+        paragraphStyle.paragraphSpacing = 10
+        productDescriptionTextView.typingAttributes = [
+            .paragraphStyle: paragraphStyle,
+            .font: UIFont.systemFont(ofSize: 17, weight: .regular),
+            .foregroundColor: UIColor.secondaryLabel
+        ]
     }
 
     override func viewDidLayoutSubviews() {
@@ -206,20 +216,26 @@ class ProductDetailViewController: UIViewController {
             })
         else { return }
 
-        cardPanel.layer.cornerRadius  = 24
+        cardPanel.layer.cornerRadius  = 30
         cardPanel.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        cardPanel.layer.masksToBounds = true
+        cardPanel.layer.masksToBounds = false
+        
+        // Dramatic shadow for elevation effect
+        cardPanel.layer.shadowColor   = UIColor.black.cgColor
+        cardPanel.layer.shadowOpacity = 0.12
+        cardPanel.layer.shadowRadius  = 24
+        cardPanel.layer.shadowOffset  = CGSize(width: 0, height: -8)
     }
 
 
     private func applyPillBadge(_ label: UILabel, tint: UIColor) {
-        label.layer.cornerRadius = 8
+        label.layer.cornerRadius = 12
         label.clipsToBounds      = true
         label.textAlignment      = .center
     }
 
     private func applySolidBadge(_ label: UILabel, bg: UIColor, fg: UIColor) {
-        label.layer.cornerRadius = 8
+        label.layer.cornerRadius = 12
         label.clipsToBounds      = true
         label.backgroundColor    = bg
         label.textColor          = fg
@@ -293,24 +309,36 @@ class ProductDetailViewController: UIViewController {
         categoryLabel.text = "  \(product.category.uppercased())  "
         applyPillBadge(categoryLabel, tint: catTint)
 
-        productDescriptionTextView.text = product.description
+        // Apply description with enhanced line spacing
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5
+        paragraphStyle.paragraphSpacing = 10
+        let attributedString = NSAttributedString(
+            string: product.description,
+            attributes: [
+                .paragraphStyle: paragraphStyle,
+                .font: UIFont.systemFont(ofSize: 17, weight: .regular),
+                .foregroundColor: UIColor.secondaryLabel
+            ]
+        )
+        productDescriptionTextView.attributedText = attributedString
     }
 
 
     private func setupLabels() {
-        productNameLabel.font  = .systemFont(ofSize: 24, weight: .bold)
+        productNameLabel.font  = .systemFont(ofSize: 32, weight: .bold)
         productNameLabel.textColor = nearBlack
 
-        brandLabel.font      = .systemFont(ofSize: 14, weight: .regular)
+        brandLabel.font      = .systemFont(ofSize: 16, weight: .regular)
         brandLabel.textColor = .secondaryLabel
 
-        productPriceLabel.font = .systemFont(ofSize: 28, weight: .heavy)
+        productPriceLabel.font = .systemFont(ofSize: 32, weight: .heavy)
         productPriceLabel.textColor = nearBlack
 
-        ratingLabel.font   = .systemFont(ofSize: 12, weight: .semibold)
-        stockLabel.font    = .systemFont(ofSize: 12, weight: .semibold)
-        discountLabel.font = .systemFont(ofSize: 11, weight: .bold)
-        categoryLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        ratingLabel.font   = .systemFont(ofSize: 13, weight: .semibold)
+        stockLabel.font    = .systemFont(ofSize: 13, weight: .semibold)
+        discountLabel.font = .systemFont(ofSize: 13, weight: .bold)
+        categoryLabel.font = .systemFont(ofSize: 12, weight: .semibold)
     }
 
 

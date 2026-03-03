@@ -10,6 +10,7 @@ struct CartView: View {
     @State private var promoCode: String = ""
     
     private let primaryColor = Color(red: 248/255, green: 188/255, blue: 60/255)
+    private let nearBlack = Color(red: 0.1, green: 0.1, blue: 0.1)
 
     var body: some View {
         Group {
@@ -19,6 +20,11 @@ struct CartView: View {
                 cartContent
             }
         }
+        .navigationTitle("Cart")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(primaryColor, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.light, for: .navigationBar)
         .safeAreaInset(edge: .bottom) {
             if !viewModel.isEmpty {
                 VStack(spacing: 0) {
