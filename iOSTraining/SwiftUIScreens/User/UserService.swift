@@ -91,12 +91,30 @@ final class UserService: UserServiceProtocol {
 
     func addAddress(_ address: Address, to user: User) -> User {
         var updatedUser = user
-        updatedUser.addresses.append(address)
-
-        // If first address, make it default
-        if updatedUser.addresses.count == 1 {
+        
+        // Build new addresses array with proper default handling
+        var newAddresses = updatedUser.addresses.map { addr -> Address in
+            var modifiedAddr = addr
+            // If new address is default, unset all others
+            if address.isDefault {
+                modifiedAddr.isDefault = false
+            }
+            return modifiedAddr
+        }
+        
+        // Append the new address
+        newAddresses.append(address)
+        
+        // If first address, ensure it's default
+        if newAddresses.count == 1 {
+            newAddresses[0].isDefault = true
+            updatedUser.defaultAddressId = address.id
+        } else if address.isDefault {
             updatedUser.defaultAddressId = address.id
         }
+        
+        // Replace entire array in one operation
+        updatedUser.addresses = newAddresses
 
         return updatedUser
     }
@@ -104,19 +122,47 @@ final class UserService: UserServiceProtocol {
     func updateAddress(_ address: Address, for user: User) -> User {
         var updatedUser = user
         if let index = updatedUser.addresses.firstIndex(where: { $0.id == address.id }) {
-            updatedUser.addresses[index] = address
+            // Build new addresses array with proper default handling
+            var newAddresses = updatedUser.addresses.enumerated().map { i, addr -> Address in
+                if i == index {
+                    return address
+                } else {
+                    var modifiedAddr = addr
+                    // If updated address is being set as default, unset all others
+                    if address.isDefault {
+                        modifiedAddr.isDefault = false
+                    }
+                    return modifiedAddr
+                }
+            }
+            
+            // Replace entire array in one operation
+            updatedUser.addresses = newAddresses
+            
+            if address.isDefault {
+                updatedUser.defaultAddressId = address.id
+            }
         }
         return updatedUser
     }
 
     func removeAddress(withId id: String, from user: User) -> User {
         var updatedUser = user
-        updatedUser.addresses.removeAll { $0.id == id }
+        let wasDefault = updatedUser.defaultAddressId == id
+        
+        // Build new addresses array without the removed address
+        var newAddresses = updatedUser.addresses.filter { $0.id != id }
 
         // If removed address was default, set new default
-        if updatedUser.defaultAddressId == id {
-            updatedUser.defaultAddressId = updatedUser.addresses.first?.id
+        if wasDefault && !newAddresses.isEmpty {
+            newAddresses[0].isDefault = true
+            updatedUser.defaultAddressId = newAddresses[0].id
+        } else if newAddresses.isEmpty {
+            updatedUser.defaultAddressId = nil
         }
+        
+        // Replace entire array in one operation
+        updatedUser.addresses = newAddresses
 
         return updatedUser
     }
@@ -124,6 +170,14 @@ final class UserService: UserServiceProtocol {
     func setDefaultAddress(withId id: String, for user: User) -> User {
         var updatedUser = user
         updatedUser.defaultAddressId = id
+        
+        // Build new addresses array with updated isDefault flags
+        updatedUser.addresses = updatedUser.addresses.map { addr -> Address in
+            var modifiedAddr = addr
+            modifiedAddr.isDefault = (addr.id == id)
+            return modifiedAddr
+        }
+        
         return updatedUser
     }
 }

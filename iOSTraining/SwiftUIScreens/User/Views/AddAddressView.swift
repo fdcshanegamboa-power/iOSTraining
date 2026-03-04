@@ -150,10 +150,6 @@ struct AddAddressView: View {
         
         viewModel.addAddress(newAddress)
         
-        if setAsDefault {
-            viewModel.setDefaultAddress(withId: newAddress.id)
-        }
-        
         saveMessage = "Address added successfully!"
         showingSaveAlert = true
     }

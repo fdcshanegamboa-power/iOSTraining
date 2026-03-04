@@ -15,7 +15,10 @@ class ProductListTableViewCell: UITableViewCell {
     @IBOutlet weak var productDescriptionLabel: UILabel!
     @IBOutlet weak var featuredBadge: UILabel!
     @IBOutlet weak var categoryBadge: UILabel!
-    
+    @IBOutlet weak var cardContainer: UIView!
+    @IBOutlet weak var ratingLabel: UILabel!
+    @IBOutlet weak var ratingImageView: UIImageView!
+    @IBOutlet weak var stockLabel: UILabel!
     
     private var currentImageURL: String?
     var product: Product? {
@@ -29,24 +32,36 @@ class ProductListTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        productImageView.layer.cornerRadius = 12
+        // Card shadow and styling
+        cardContainer.layer.shadowColor = UIColor.black.cgColor
+        cardContainer.layer.shadowOffset = CGSize(width: 0, height: 2)
+        cardContainer.layer.shadowRadius = 8
+        cardContainer.layer.shadowOpacity = 0.1
+        cardContainer.layer.masksToBounds = false
+        
+        // Product image styling
+        productImageView.layer.cornerRadius = 10
         productImageView.clipsToBounds = true
         productImageView.contentMode = .scaleAspectFill
         productImageView.backgroundColor = .systemGray6
         
+        // Badge styling
         featuredBadge.isHidden = true
-        
-        categoryBadge.layer.cornerRadius = 4
-        categoryBadge.clipsToBounds = true
-        
         featuredBadge.layer.cornerRadius = 4
         featuredBadge.clipsToBounds = true
         
+        categoryBadge.layer.cornerRadius = 4
+        categoryBadge.clipsToBounds = true
         categoryBadge.setContentHuggingPriority(.required, for: .horizontal)
         categoryBadge.setContentCompressionResistancePriority(.required, for: .horizontal)
         
-        self.accessoryType = .disclosureIndicator
-        self.selectionStyle = .default
+        // Rating star styling
+        ratingImageView.tintColor = primaryColor
+        ratingImageView.contentMode = .scaleAspectFit
+        
+        // Remove default cell styling for card effect
+        self.selectionStyle = .none
+        self.backgroundColor = .clear
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -57,6 +72,10 @@ class ProductListTableViewCell: UITableViewCell {
         super.prepareForReuse()
         productImageView.image = nil
         currentImageURL = nil
+        featuredBadge.isHidden = true
+        categoryBadge.isHidden = false
+        ratingLabel.text = nil
+        stockLabel.text = nil
     }
     
     private func displayData() {
@@ -66,21 +85,42 @@ class ProductListTableViewCell: UITableViewCell {
         productPriceLabel.text = product.price.formatted(.currency(code: "USD").locale(Locale(identifier: "en_US")))
         productDescriptionLabel.text = product.description
         
+        // Category badge in content area (after product name)
         categoryBadge.isHidden = false
         categoryBadge.text = "  \(product.category.uppercased())  "
         categoryBadge.backgroundColor = primaryColor.withAlphaComponent(0.2)
         categoryBadge.textColor = primaryColor
-        categoryBadge.font = .systemFont(ofSize: 12, weight: .semibold)
+        categoryBadge.font = .systemFont(ofSize: 10, weight: .semibold)
         
+        // Discount badge overlaid on image
         let discount = product.discountPercentage
         if discount > 0 {
             featuredBadge.isHidden = false
             featuredBadge.text = "  \(String(format: "%.0f", discount))% OFF  "
             featuredBadge.backgroundColor = primaryColor
             featuredBadge.textColor = .white
-            featuredBadge.font = .systemFont(ofSize: 12, weight: .semibold)
+            featuredBadge.font = .systemFont(ofSize: 11, weight: .heavy)
         } else {
             featuredBadge.isHidden = true
+        }
+        
+        // Rating display
+        let rating = product.rating
+        ratingLabel.text = String(format: "%.1f", rating)
+        
+        // Stock status - semibold for emphasis like reference design
+        stockLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        if product.stock > 0 {
+            if product.stock <= 5 {
+                stockLabel.text = "Only \(product.stock) left"
+                stockLabel.textColor = .systemOrange
+            } else {
+                stockLabel.text = "In Stock"
+                stockLabel.textColor = .systemGreen
+            }
+        } else {
+            stockLabel.text = "Out of Stock"
+            stockLabel.textColor = .systemRed
         }
         
         loadImage(from: product.thumbnail)

@@ -83,6 +83,7 @@ private extension SceneDelegate {
         let tabBar = UITabBarController()
         tabBar.viewControllers = [
             makeProductsTab(),
+            makeFlashSaleTab(),
             makeCartTab(),
             makeProfileTab(),
             makeSettingsTab()
@@ -133,6 +134,17 @@ private extension SceneDelegate {
         )
         return nav
     }
+    
+    func makeFlashSaleTab() -> UINavigationController {
+        let vc  = UIHostingController(rootView: FlashSaleView())
+        let nav = UINavigationController(rootViewController: vc)
+        nav.setNavigationBarHidden(true, animated: false)
+        nav.tabBarItem = UITabBarItem(
+            title: "Flash Sale",
+            image: UIImage(systemName: "bolt"),
+            selectedImage: UIImage(systemName: "bolt.fill"))
+        return nav
+    }
 
     func makeCartTab() -> UINavigationController {
         // SwiftUI-based view wrapped in UIHostingController with NavigationStack
@@ -151,9 +163,11 @@ private extension SceneDelegate {
     }
 
     func makeSettingsTab() -> UINavigationController {
-        // Code-based VC — init directly, no nibName
-        let vc = SettingsViewController()
+        // SwiftUI-based Settings view wrapped in UIHostingController
+        let vc = UIHostingController(rootView: SettingsView())
+        vc.title = "Settings"
         let nav = UINavigationController(rootViewController: vc)
+        nav.setNavigationBarHidden(true, animated: false) // Hide UIKit nav bar, use SwiftUI NavigationStack
         nav.tabBarItem = UITabBarItem(
             title: "Settings",
             image: UIImage(systemName: "gearshape"),

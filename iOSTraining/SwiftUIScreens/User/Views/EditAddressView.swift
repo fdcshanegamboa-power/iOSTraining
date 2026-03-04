@@ -167,11 +167,6 @@ struct EditAddressView: View {
         
         viewModel.updateAddress(updatedAddress)
         
-        if isDefault && !address.isDefault {
-            // If user set this as default, update it
-            viewModel.setDefaultAddress(withId: updatedAddress.id)
-        }
-        
         saveMessage = "Address updated successfully!"
         showingSaveAlert = true
     }

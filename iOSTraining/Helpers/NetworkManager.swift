@@ -17,7 +17,7 @@ protocol ProductFetchDelegate: AnyObject {
 class NetworkManager {
     static let shared = NetworkManager()
     
-    private let productsURL = "https://dummyjson.com/products"
+    private let productsURL = "https://dummyjson.com/products?limit=100"
     
     weak var delegate: ProductFetchDelegate?
     

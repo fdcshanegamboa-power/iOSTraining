@@ -19,8 +19,6 @@ struct Product: Codable, Equatable {
     let brand: String?
     let thumbnail: String
     let images: [String]
-    
-    // Convenience computed property
     var image: String? {
         return images.first
     }

@@ -34,6 +34,10 @@ class ProductListViewController: UIViewController {
         tableView.register(nib, forCellReuseIdentifier: cellIdentifier)
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.estimatedRowHeight = 160
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(red: 0.949, green: 0.949, blue: 0.969, alpha: 1.0)
         productSearchBar.delegate = self
     }
     

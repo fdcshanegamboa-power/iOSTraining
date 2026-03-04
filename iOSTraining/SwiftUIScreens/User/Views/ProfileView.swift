@@ -10,7 +10,6 @@ import SwiftUI
 struct ProfileView: View {
     @State private var viewModel = UserViewModel()
     @State private var showingAddAddressSheet = false
-    @State private var showingEditAddressSheet = false
     @State private var addressToEdit: Address?
     
     private let primaryColor = Color(red: 248/255, green: 188/255, blue: 60/255)
@@ -43,13 +42,15 @@ struct ProfileView: View {
                 viewModel = UserViewModel()
             }
         }
-        .sheet(isPresented: $showingEditAddressSheet) {
-            if let address = addressToEdit {
-                EditAddressView(address: address) {
-                    // Refresh after address is updated
-                    viewModel = UserViewModel()
-                }
+        .sheet(item: $addressToEdit) { address in
+            EditAddressView(address: address) {
+                // Refresh after address is updated
+                viewModel = UserViewModel()
             }
+        }
+        .onAppear {
+            // Refresh data when view appears to reflect any changes made from other screens
+            viewModel = UserViewModel()
         }
     }
     
@@ -174,7 +175,6 @@ struct ProfileView: View {
                         .contentShape(Rectangle())
                         .onTapGesture {
                             addressToEdit = address
-                            showingEditAddressSheet = true
                         }
                         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
@@ -196,7 +196,6 @@ struct ProfileView: View {
                         .contextMenu {
                             Button {
                                 addressToEdit = address
-                                showingEditAddressSheet = true
                             } label: {
                                 Label("Edit", systemImage: "pencil")
                             }
