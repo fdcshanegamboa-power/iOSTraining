@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Observation
 
 struct FlashSaleItem: Identifiable, Equatable {
     let id: Int
@@ -21,13 +22,18 @@ struct FlashSaleItem: Identifiable, Equatable {
 
 
 struct FlashSaleConfig {
-    static let cycleDuration: TimeInterval = 60
+    static let cycleDuration: TimeInterval = 35
     static let saleDuration: TimeInterval = 30
     static let productCount: Int = 10
     static let discountMultiplier: Double = 0.60
 }
 
+@Observable
 final class FlashSaleService {
+    static let shared = FlashSaleService()
+
+    // MARK: Published state
+    private(set) var currentFlashItems: [FlashSaleItem] = []
 
     // MARK: Persistence keys
     private enum Keys {
@@ -37,6 +43,8 @@ final class FlashSaleService {
     }
 
     private let defaults = UserDefaults.standard
+    
+    private init() {}
 
     func currentSaleWindow() -> (start: Date, end: Date) {
         // Restore persisted window
@@ -82,7 +90,10 @@ final class FlashSaleService {
     ///   3. Shuffle with a persisted seed so the batch stays stable
     ///      within a cycle but changes between cycles.
     func selectFlashItems(from products: [Product]) -> [FlashSaleItem] {
-        guard !products.isEmpty else { return [] }
+        guard !products.isEmpty else { 
+            currentFlashItems = []
+            return [] 
+        }
 
         let seed = defaults.integer(forKey: Keys.productSeed)
 
@@ -96,7 +107,15 @@ final class FlashSaleService {
         let selected  = Array(shuffled.prefix(FlashSaleConfig.productCount))
 
         // 3. Build FlashSaleItem with discount applied
-        return selected.map { makeFlashItem(from: $0) }
+        let items = selected.map { makeFlashItem(from: $0) }
+        currentFlashItems = items
+        return items
+    }
+    
+    /// Clears current flash items (called when sale ends)
+    func clearFlashItems() {
+        print("🧹 Clearing flash sale items (count: \(currentFlashItems.count))")
+        currentFlashItems = []
     }
 
     // MARK: - Private helpers

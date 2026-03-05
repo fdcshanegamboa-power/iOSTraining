@@ -15,6 +15,7 @@ class ProductListViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     private let cellIdentifier = "ProductListTableViewCell"
+    private var flashSaleObserver: NSObjectProtocol?
     
     var products: [Product] = []
     var filteredProducts: [Product] = []
@@ -27,6 +28,21 @@ class ProductListViewController: UIViewController {
         setupTableView()
         setupNetworkManager()
         fetchProducts()
+        
+        flashSaleObserver = NotificationCenter.default.addObserver(
+            forName: .flashSaleDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.tableView.reloadData()
+        }
+            
+    }
+    
+    deinit {
+        if let obs = flashSaleObserver {
+            NotificationCenter.default.removeObserver(obs)
+        }
     }
     
     private func setupTableView() {
@@ -62,6 +78,9 @@ class ProductListViewController: UIViewController {
             },
             UIAction(title: "Price (High to Low)", image: UIImage(systemName: "arrow.down")) { _ in
                 self.sortProducts(by: .priceHighToLow)
+            },
+            UIAction(title: "Discounted", image: UIImage(systemName: "timer")) { _ in
+                self.sortProducts(by: .discounted)
             }
         ])
         
@@ -72,6 +91,7 @@ class ProductListViewController: UIViewController {
     enum SortOption {
         case nameAscending, nameDescending
         case priceLowToHigh, priceHighToLow
+        case discounted
     }
     
     private func sortProducts(by option: SortOption) {
@@ -83,6 +103,9 @@ class ProductListViewController: UIViewController {
             case .nameDescending:   return p1.title > p2.title
             case .priceLowToHigh:   return p1.price < p2.price
             case .priceHighToLow:   return p1.price > p2.price
+            case .discounted:
+                let flashIds = Set(FlashSaleService.shared.currentFlashItems.map{ $0.product.id })
+                return flashIds.contains(p1.id) && !flashIds.contains(p2.id)
             }
         }
         

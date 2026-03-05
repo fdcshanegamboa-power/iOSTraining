@@ -30,7 +30,7 @@ final class FlashSaleViewModel {
     private(set) var progress: Double       = 1.0   // 0…1 used for countdown ring
 
     // MARK: - Private
-    private let service      = FlashSaleService()
+    private let service      = FlashSaleService.shared
     private var allProducts  = [Product]()
     private var timer        : Timer?
     private var saleWindow   : (start: Date, end: Date)?
@@ -92,6 +92,8 @@ final class FlashSaleViewModel {
     // MARK: - Sale state
 
     private func refreshSaleState() {
+        
+        NotificationCenter.default.post(name: .flashSaleDidChange, object: nil)
         let window      = service.currentSaleWindow()
         saleWindow      = window
         let isActive    = service.isSaleActive(in: window)
@@ -101,9 +103,13 @@ final class FlashSaleViewModel {
             phase     = .active(items: items)
             phaseLabel = "Flash Sale Ends In:"
         } else {
+            service.clearFlashItems()
             phase     = .waiting
             phaseLabel = "Next Flash Sale Starts In:"
         }
+        
+        // Update cart prices whenever sale state changes
+        CartManager.shared.updatePricesForFlashSale()
 
         updateCountdown()
     }
@@ -140,9 +146,15 @@ final class FlashSaleViewModel {
         }
         
         let isCurrentlyActive = service.isSaleActive(in: window)
-        if !isCurrentlyActive, case .active = phase {
+        let wasActive = if case .active = phase { true } else { false }
+        
+        if !isCurrentlyActive && wasActive {
+            // Clear flash items first so cart prices can revert
+            service.clearFlashItems()
             phase = .waiting
             phaseLabel = "Next Flash Sale Starts In:"
+            // Update cart prices when sale ends
+            CartManager.shared.updatePricesForFlashSale()
         }
         
         updateCountdown()
@@ -200,6 +212,10 @@ final class FlashSaleViewModel {
             self?.stopTimer()
         }
     }
+}
+
+extension Notification.Name {
+    static let flashSaleDidChange = Notification.Name("flashSaleDidChange")
 }
 
 // UIApplication notification names need UIKit – add import guard

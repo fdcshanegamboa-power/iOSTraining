@@ -30,16 +30,35 @@ class CartManager {
             return
         }
         
-        let effectivePrice = atPrice ?? product.price
+        // Determine the effective price
+        let effectivePrice: Double
+        let isFlash: Bool
         
-        // Check if same product at same price exists
-        if let index = items.firstIndex(where: { 
-            $0.product.id == product.id && $0.pricePurchasedAt == effectivePrice 
-        }) {
-            items[index].quantity += 1
+        if let providedPrice = atPrice {
+            // Explicit price provided (from flash sale screen)
+            effectivePrice = providedPrice
+            isFlash = isFlashSale
         } else {
-            // Add as new item (handles same product with different prices)
-            items.append(CartItem(product: product, quantity: 1, isSelected: false, pricePurchasedAt: effectivePrice, isFlashSale: isFlashSale))
+            // No price provided - check if product is currently on flash sale
+            if let flashItem = FlashSaleService.shared.currentFlashItems.first(where: { $0.product.id == product.id }) {
+                effectivePrice = flashItem.flashPrice
+                isFlash = true
+                print("🔥 Adding flash sale item at $\(effectivePrice) (original: $\(product.price))")
+            } else {
+                effectivePrice = product.price
+                isFlash = false
+            }
+        }
+        
+        // Merge by product ID only (not by price)
+        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+            items[index].quantity += 1
+            // Update price to current effective price
+            items[index].pricePurchasedAt = effectivePrice
+            items[index].isFlashSale = isFlash
+        } else {
+            // Add as new item
+            items.append(CartItem(product: product, quantity: 1, isSelected: false, pricePurchasedAt: effectivePrice, isFlashSale: isFlash))
         }
         save()
     }
@@ -91,6 +110,51 @@ class CartManager {
     
     func reloadCart(){
         self.items = load()
+    }
+    
+    /// Updates cart item prices based on current flash sale status
+    func updatePricesForFlashSale() {
+        let flashItems = FlashSaleService.shared.currentFlashItems
+        print("🔄 Updating cart prices. Flash items count: \(flashItems.count)")
+        
+        // Build dictionary of product ID -> flash price
+        var flashProductMap: [Int: Double] = [:]
+        for item in flashItems {
+            flashProductMap[item.product.id] = item.flashPrice
+        }
+        
+        var hasChanges = false
+        for index in items.indices {
+            let productId = items[index].product.id
+            
+            if let flashPrice = flashProductMap[productId] {
+                // Product is on flash sale - apply discount
+                if items[index].pricePurchasedAt != flashPrice {
+                    print("💰 Applying flash price to \(items[index].product.title): $\(items[index].pricePurchasedAt) → $\(flashPrice)")
+                    items[index].pricePurchasedAt = flashPrice
+                    items[index].isFlashSale = true
+                    hasChanges = true
+                }
+            } else {
+                // Product not on flash sale - revert to original price
+                let originalPrice = items[index].product.price
+                if items[index].isFlashSale && items[index].pricePurchasedAt != originalPrice {
+                    print("📈 Reverting to original price for \(items[index].product.title): $\(items[index].pricePurchasedAt) → $\(originalPrice)")
+                    items[index].pricePurchasedAt = originalPrice
+                    items[index].isFlashSale = false
+                    hasChanges = true
+                }
+            }
+        }
+        
+        if hasChanges {
+            print("✅ Cart prices updated and saved")
+            save()
+            // Force reload to ensure SwiftUI detects the changes
+            items = load()
+        } else {
+            print("ℹ️ No cart price changes needed")
+        }
     }
 
     var totalItems: Int {

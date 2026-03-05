@@ -283,7 +283,40 @@ class ProductDetailViewController: UIViewController {
 
         productNameLabel.text  = product.title
         brandLabel.text        = product.brand ?? "Unknown Brand"
-        productPriceLabel.text = product.price.formatted(.currency(code: "USD").locale(Locale(identifier: "en_US")))
+        
+        
+        if let flashItem = FlashSaleService.shared.currentFlashItems.first(
+            where: { $0.product.id == product.id }) {
+            
+            let originalText = NSMutableAttributedString(
+                string: product.price.formatted(
+                    .currency(code: "USD")
+                    .locale(Locale(identifier: "en_US"))) + "  ",
+                attributes: [
+                    .strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                    .foregroundColor: UIColor.systemGray
+                ]
+            )
+            
+            let flashText = NSAttributedString(
+                string: flashItem.flashPrice.formatted(
+                    .currency(code: "USD")
+                    .locale(Locale(identifier: "en_US"))),
+                attributes: [
+                    .foregroundColor: UIColor.systemRed,
+                    .font: UIFont.systemFont(ofSize: 15, weight: .bold)
+                ]
+            )
+            
+            originalText.append(flashText)
+            productPriceLabel.attributedText = originalText
+
+        } else {
+            productPriceLabel.attributedText = nil
+            productPriceLabel.text = product.price.formatted(
+                .currency(code: "USD")
+                .locale(Locale(identifier: "en_US")))
+        }
 
         ratingLabel.text = "  \(String(format: "%.1f", product.rating))  rating "
         applyPillBadge(ratingLabel, tint: UIColor(red: 1.0, green: 0.75, blue: 0.0, alpha: 1))

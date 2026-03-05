@@ -82,9 +82,49 @@ class ProductListTableViewCell: UITableViewCell {
         guard let product = product else { return }
         
         productNameLabel.text = product.title
-        productPriceLabel.text = product.price.formatted(.currency(code: "USD").locale(Locale(identifier: "en_US")))
         productDescriptionLabel.text = product.description
         
+        
+        if let flashItem = FlashSaleService.shared.currentFlashItems.first(
+            where: { $0.product.id == product.id }) {
+            let originalText = NSMutableAttributedString(
+                string: product.price.formatted(
+                    .currency(code: "USD")
+                    .locale(Locale(identifier: "en_US"))) + "  ",
+                attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue,
+                             .foregroundColor: UIColor.systemGray]
+            )
+            let flashText = NSAttributedString (
+                string: flashItem.flashPrice.formatted(
+                    .currency(code: "USD")
+                    .locale(Locale(identifier: "en_US"))),
+                attributes: [
+                    .foregroundColor: UIColor.systemRed,
+                    .font: UIFont.systemFont(ofSize: 15, weight: .bold)]
+            )
+            originalText.append(flashText)
+            productPriceLabel.attributedText = originalText
+            let flashDiscount = ((product.price - flashItem.flashPrice) / product.price) * 100
+            featuredBadge.isHidden = false
+            featuredBadge.text = "  🔥 \(String(format: "%.0f", flashDiscount))% OFF  "
+            featuredBadge.backgroundColor = .systemRed
+            featuredBadge.textColor = .white
+            featuredBadge.font = .systemFont(ofSize: 11, weight: .heavy)
+        } else {
+            productPriceLabel.attributedText = nil
+            productPriceLabel.text = product.price.formatted(.currency(code: "USD").locale(Locale(identifier: "en_US")))
+            // Discount badge overlaid on image
+            let discount = product.discountPercentage
+            if discount > 0 {
+                featuredBadge.isHidden = false
+                featuredBadge.text = "  \(String(format: "%.0f", discount))% OFF  "
+                featuredBadge.backgroundColor = primaryColor
+                featuredBadge.textColor = .white
+                featuredBadge.font = .systemFont(ofSize: 11, weight: .heavy)
+            } else {
+                featuredBadge.isHidden = true
+            }
+        }
         // Category badge in content area (after product name)
         categoryBadge.isHidden = false
         categoryBadge.text = "  \(product.category.uppercased())  "
@@ -92,17 +132,7 @@ class ProductListTableViewCell: UITableViewCell {
         categoryBadge.textColor = primaryColor
         categoryBadge.font = .systemFont(ofSize: 10, weight: .semibold)
         
-        // Discount badge overlaid on image
-        let discount = product.discountPercentage
-        if discount > 0 {
-            featuredBadge.isHidden = false
-            featuredBadge.text = "  \(String(format: "%.0f", discount))% OFF  "
-            featuredBadge.backgroundColor = primaryColor
-            featuredBadge.textColor = .white
-            featuredBadge.font = .systemFont(ofSize: 11, weight: .heavy)
-        } else {
-            featuredBadge.isHidden = true
-        }
+
         
         // Rating display
         let rating = product.rating

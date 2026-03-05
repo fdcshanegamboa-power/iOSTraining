@@ -10,8 +10,8 @@ struct CartItem: Identifiable, Codable {//, Equatable {
     let product: Product
     var quantity: Int
     var isSelected: Bool
-    let pricePurchasedAt: Double  // Price at time of addition (preserves flash sale discounts)
-    let isFlashSale: Bool         // Track if item was added during flash sale
+    var pricePurchasedAt: Double  // Price at time of addition (preserves flash sale discounts)
+    var isFlashSale: Bool         // Track if item was added during flash sale
     
     var subtotal: Double {
         pricePurchasedAt * Double(quantity)

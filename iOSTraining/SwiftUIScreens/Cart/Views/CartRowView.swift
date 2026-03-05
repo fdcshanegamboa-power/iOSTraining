@@ -66,48 +66,48 @@ struct CartRowView: View {
                 }
                 
                 HStack(spacing: 12) {
-                    // Quantity Stepper (disabled for flash sale items)
+                    // Quantity Stepper
+                    HStack(spacing: 0) {
+                        Button {
+                            onQuantityChange(item.quantity - 1)
+                        } label: {
+                            Image(systemName: "minus")
+                                .font(.caption)
+                                .frame(width: 32, height: 32)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.secondary)
+                        
+                        Text("\(item.quantity)")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .frame(width: 40)
+                        
+                        Button {
+                            onQuantityChange(item.quantity + 1)
+                        } label: {
+                            Image(systemName: "plus")
+                                .font(.caption)
+                                .frame(width: 32, height: 32)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(primaryColor)
+                    }
+                    
+                    // Flash Sale Badge (if applicable)
                     if item.isFlashSale {
-                        HStack(spacing: 6) {
+                        HStack(spacing: 4) {
                             Image(systemName: "bolt.fill")
                                 .font(.caption2)
-                                .foregroundStyle(.red)
-                            Text("Flash Sale x\(item.quantity)")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                                .foregroundStyle(.red)
+                            Text("Flash")
+                                .font(.caption2)
+                                .fontWeight(.bold)
                         }
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(.red.opacity(0.1))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 3)
+                        .background(.red)
                         .clipShape(Capsule())
-                    } else {
-                        HStack(spacing: 0) {
-                            Button {
-                                onQuantityChange(item.quantity - 1)
-                            } label: {
-                                Image(systemName: "minus")
-                                    .font(.caption)
-                                    .frame(width: 32, height: 32)
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(.secondary)
-                            
-                            Text("\(item.quantity)")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .frame(width: 40)
-                            
-                            Button {
-                                onQuantityChange(item.quantity + 1)
-                            } label: {
-                                Image(systemName: "plus")
-                                    .font(.caption)
-                                    .frame(width: 32, height: 32)
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(primaryColor)
-                        }
                     }
                     
                     Spacer()
