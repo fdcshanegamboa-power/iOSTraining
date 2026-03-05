@@ -12,6 +12,8 @@ import SwiftUI
 struct FlashSaleView: View {
 
     @State private var viewModel = FlashSaleViewModel()
+    @State private var showAddedToast = false
+    @State private var addedProductTitle = ""
 
     private let primary   = Color(red: 248/255, green: 188/255, blue: 60/255)   // #F8BC3C
     private let saleRed   = Color(red: 230/255, green: 53/255,  blue: 53/255)   // flash price
@@ -27,9 +29,32 @@ struct FlashSaleView: View {
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarHidden(true)
+            .overlay(alignment: .bottom) {
+                if showAddedToast {
+                    Toast(message: "✓ \(addedProductTitle) added to cart", icon: "cart.fill.badge.plus")
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
         }
         .onAppear  { viewModel.onAppear()     }
         .onDisappear { viewModel.onDisappear() }
+    }
+    
+    // MARK: - Add to Cart
+    
+    private func addToCart(item: FlashSaleItem) {
+        CartManager.shared.add(product: item.product, atPrice: item.flashPrice, isFlashSale: true)
+        
+        addedProductTitle = item.product.title
+        withAnimation(.spring(response: 0.3)) {
+            showAddedToast = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            withAnimation {
+                showAddedToast = false
+            }
+        }
     }
 
     // MARK: - Header
@@ -155,7 +180,12 @@ struct FlashSaleView: View {
                 spacing: 14
             ) {
                 ForEach(items) { item in
-                    FlashProductCard(item: item, saleRed: saleRed, primary: primary)
+                    FlashProductCard(
+                        item: item, 
+                        saleRed: saleRed, 
+                        primary: primary,
+                        onAddToCart: { addToCart(item: item) }
+                    )
                 }
             }
             .padding(14)
@@ -266,6 +296,7 @@ struct FlashProductCard: View {
     let item     : FlashSaleItem
     let saleRed  : Color
     let primary  : Color
+    let onAddToCart: () -> Void
 
     @State private var appear = false
 
@@ -324,6 +355,21 @@ struct FlashProductCard: View {
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
+                
+                // Add to Cart button
+                Button(action: onAddToCart) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "cart.badge.plus")
+                            .font(.system(size: 11, weight: .semibold))
+                        Text("Add to Cart")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(saleRed)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                }
                 .padding(.bottom, 10)
             }
             .padding(.horizontal, 10)
@@ -338,6 +384,32 @@ struct FlashProductCard: View {
                 appear = true
             }
         }
+    }
+}
+
+// MARK: - Toast Component
+
+struct Toast: View {
+    let message: String
+    let icon: String
+    
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: icon)
+                .font(.system(size: 16, weight: .semibold))
+            Text(message)
+                .font(.subheadline)
+                .fontWeight(.medium)
+        }
+        .foregroundStyle(.white)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .background(
+            Capsule()
+                .fill(Color.green.gradient)
+                .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 4)
+        )
+        .padding(.bottom, 20)
     }
 }
 

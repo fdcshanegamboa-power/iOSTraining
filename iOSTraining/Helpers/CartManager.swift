@@ -24,15 +24,22 @@ class CartManager {
         return "cart_\(userId)"
     }
     
-    func add(product: Product) {
+    func add(product: Product, atPrice: Double? = nil, isFlashSale: Bool = false) {
         guard UserManager.shared.isLoggedIn else {
             print("⚠️ User not logged in. Cannot add to cart.")
             return
         }
-        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+        
+        let effectivePrice = atPrice ?? product.price
+        
+        // Check if same product at same price exists
+        if let index = items.firstIndex(where: { 
+            $0.product.id == product.id && $0.pricePurchasedAt == effectivePrice 
+        }) {
             items[index].quantity += 1
         } else {
-            items.append(CartItem(product: product, quantity: 1, isSelected: false))
+            // Add as new item (handles same product with different prices)
+            items.append(CartItem(product: product, quantity: 1, isSelected: false, pricePurchasedAt: effectivePrice, isFlashSale: isFlashSale))
         }
         save()
     }

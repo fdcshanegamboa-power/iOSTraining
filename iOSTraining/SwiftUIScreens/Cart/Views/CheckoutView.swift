@@ -55,10 +55,9 @@ struct CheckoutView: View {
         } message: {
             Text("Your order has been placed successfully!\nTotal: $\(viewModel.total, specifier: "%.2f")")
         }
-        .confirmationDialog(
+        .alert(
             "Confirm your purchase?",
-            isPresented: $showingConfirmation,
-            titleVisibility: .visible
+            isPresented: $showingConfirmation
         ) {
             Button("Confirm Purchase") {
                 viewModel.confirmPurchase()
@@ -275,14 +274,26 @@ struct CheckoutView: View {
                     .font(.subheadline)
                     .lineLimit(2)
                 
-                Text("Qty: \(item.quantity)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 4) {
+                    Text("Qty: \(item.quantity)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    
+                    if item.isFlashSale {
+                        Image(systemName: "bolt.fill")
+                            .font(.system(size: 8))
+                            .foregroundStyle(.red)
+                        Text("Flash Sale")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.red)
+                    }
+                }
             }
             
             Spacer()
             
-            Text("$\(item.product.price * Double(item.quantity), specifier: "%.2f")")
+            Text("$\(item.subtotal, specifier: "%.2f")")
                 .font(.subheadline)
                 .fontWeight(.semibold)
         }

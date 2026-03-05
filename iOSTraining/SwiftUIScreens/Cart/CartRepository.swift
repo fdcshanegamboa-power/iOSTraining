@@ -12,7 +12,7 @@ protocol CartRepositoryProtocol {
     var hasSelectedItems: Bool { get }
     var allSelected: Bool { get }
     
-    func add(product: Product)
+    func add(product: Product, atPrice: Double?, isFlashSale: Bool)
     func remove(product: Product)
     func removeSelected()
     func updateQuantity(for item: CartItem, newQuantity: Int)
@@ -31,8 +31,8 @@ final class CartRepository: CartRepositoryProtocol {
     var hasSelectedItems: Bool { manager.hasSelectedItems }
     var allSelected: Bool { manager.allSelected }
 
-    func add(product: Product) {
-        manager.add(product: product)
+    func add(product: Product, atPrice: Double? = nil, isFlashSale: Bool = false) {
+        manager.add(product: product, atPrice: atPrice, isFlashSale: isFlashSale)
     }
 
     func remove(product: Product) {

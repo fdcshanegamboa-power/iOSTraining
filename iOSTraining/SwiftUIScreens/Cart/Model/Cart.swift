@@ -23,11 +23,17 @@ struct Cart {
         items.isEmpty
     }
     
-    mutating func add(_ product: Product) {
-        if let index = items.firstIndex(where: { $0.product.id == product.id }) {
+    mutating func add(_ product: Product, atPrice: Double? = nil, isFlashSale: Bool = false) {
+        let effectivePrice = atPrice ?? product.price
+        
+        // Check if same product at same price exists
+        if let index = items.firstIndex(where: { 
+            $0.product.id == product.id && $0.pricePurchasedAt == effectivePrice 
+        }) {
             items[index].quantity += 1
         } else {
-            items.append(CartItem(product: product))
+            // Add as new item (handles different prices for same product)
+            items.append(CartItem(product: product, quantity: 1, isSelected: false, pricePurchasedAt: effectivePrice, isFlashSale: isFlashSale))
         }
     }
     

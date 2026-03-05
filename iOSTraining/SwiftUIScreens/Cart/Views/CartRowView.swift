@@ -42,37 +42,72 @@ struct CartRowView: View {
                     .fontWeight(.semibold)
                     .lineLimit(2)
                 
-                Text("$\(item.product.price, specifier: "%.2f")")
-                    .font(.headline)
-                    .foregroundStyle(primaryColor)
+                // Price Display
+                HStack(spacing: 6) {
+                    Text("$\(item.pricePurchasedAt, specifier: "%.2f")")
+                        .font(.headline)
+                        .foregroundStyle(item.hasDiscount ? .red : primaryColor)
+                    
+                    if item.hasDiscount {
+                        Text("$\(item.product.price, specifier: "%.2f")")
+                            .font(.caption)
+                            .strikethrough()
+                            .foregroundStyle(.secondary)
+                        
+                        Text("-\(item.discountPercent)%")
+                            .font(.caption2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 2)
+                            .background(.red)
+                            .clipShape(Capsule())
+                    }
+                }
                 
                 HStack(spacing: 12) {
-                    // Quantity Stepper
-                    HStack(spacing: 0) {
-                        Button {
-                            onQuantityChange(item.quantity - 1)
-                        } label: {
-                            Image(systemName: "minus")
+                    // Quantity Stepper (disabled for flash sale items)
+                    if item.isFlashSale {
+                        HStack(spacing: 6) {
+                            Image(systemName: "bolt.fill")
+                                .font(.caption2)
+                                .foregroundStyle(.red)
+                            Text("Flash Sale x\(item.quantity)")
                                 .font(.caption)
-                                .frame(width: 32, height: 32)
+                                .fontWeight(.semibold)
+                                .foregroundStyle(.red)
                         }
-                        .buttonStyle(.bordered)
-                        .tint(.secondary)
-                        
-                        Text("\(item.quantity)")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .frame(width: 40)
-                        
-                        Button {
-                            onQuantityChange(item.quantity + 1)
-                        } label: {
-                            Image(systemName: "plus")
-                                .font(.caption)
-                                .frame(width: 32, height: 32)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(.red.opacity(0.1))
+                        .clipShape(Capsule())
+                    } else {
+                        HStack(spacing: 0) {
+                            Button {
+                                onQuantityChange(item.quantity - 1)
+                            } label: {
+                                Image(systemName: "minus")
+                                    .font(.caption)
+                                    .frame(width: 32, height: 32)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(.secondary)
+                            
+                            Text("\(item.quantity)")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .frame(width: 40)
+                            
+                            Button {
+                                onQuantityChange(item.quantity + 1)
+                            } label: {
+                                Image(systemName: "plus")
+                                    .font(.caption)
+                                    .frame(width: 32, height: 32)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(primaryColor)
                         }
-                        .buttonStyle(.bordered)
-                        .tint(primaryColor)
                     }
                     
                     Spacer()
